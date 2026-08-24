@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#F4F6F9">
+<title>ShredLog</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F0B429'/%3E%3Ctext x='50' y='68' font-size='58' font-family='system-ui' font-weight='bold' fill='%23151A21' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#F4F6F9;--card:#FFFFFF;--card2:#EAEEF3;--line:#D7DEE7;--text:#151A21;--dim:#5F6B7A;--gold:#B07900;--goldfill:#F0B429;--blue:#2563EB;--green:#15803D;--danger:#DC2626;--dangerbg:#FEF2F2;--dangertext:#991B1B}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;font-variant-numeric:tabular-nums;padding-bottom:env(safe-area-inset-bottom)}
+button{font-family:inherit}
+input{font-family:inherit;font-variant-numeric:tabular-nums}
+.wrap{max-width:640px;margin:0 auto;padding:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px;margin-bottom:10px}
+.dim{color:var(--dim)}
+.gold{color:var(--gold)}
+.blue{color:var(--blue)}
+.green{color:var(--green)}
+.btn{border:none;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:650;cursor:pointer}
+.bgold{background:var(--goldfill);color:var(--text)}
+.bgrey{background:var(--card2);color:var(--text)}
+.row{display:grid;grid-template-columns:26px 1fr 1fr 44px;gap:8px;align-items:center;margin-bottom:7px}
+.inp{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);padding:10px 8px;font-size:16px;text-align:center;outline:none}
+.chk{background:var(--card2);border:1px solid var(--line);border-radius:8px;color:var(--dim);padding:10px 0;font-size:15px;font-weight:700;cursor:pointer;width:100%}
+.chk.on{background:var(--green);border-color:var(--green);color:#FFFFFF}
+.lbl{font-size:10.5px;letter-spacing:.06em;color:var(--dim)}
+.exname{background:none;border:none;padding:0;text-align:left;cursor:pointer;color:var(--text);font-size:15.5px;font-weight:650;display:flex;align-items:center;gap:7px}
+.q{color:var(--blue);font-size:11px;border:1px solid var(--blue);border-radius:20px;width:15px;height:15px;line-height:14px;text-align:center;flex:0 0 auto}
+.form{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:13px;margin-top:10px;font-size:12.5px;line-height:1.6}
+.ftag{font-size:10px;letter-spacing:.1em;font-weight:700;margin-bottom:3px}
+#rest{position:fixed;left:0;right:0;bottom:0;background:var(--blue);color:#FFFFFF;padding:13px 18px;padding-bottom:calc(13px + env(safe-area-inset-bottom));display:none;justify-content:space-between;align-items:center;z-index:50}
+.hdr{background:var(--card);border-bottom:1px solid var(--line);padding:16px 18px 12px;position:sticky;top:0;z-index:40}
+.bar{height:3px;background:var(--line);border-radius:2px;margin-top:12px;overflow:hidden}
+.bar>div{height:100%;background:var(--goldfill);transition:width .25s}
+.dot{width:7px;height:7px;border-radius:7px;background:var(--green);display:inline-block}
+textarea{width:100%;min-height:340px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:14px;font-size:12.5px;font-family:ui-monospace,Menlo,monospace;line-height:1.6;resize:none}
+a{color:var(--blue)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="rest"><span style="font-size:13px;font-weight:650">Rest</span><span id="restT" style="font-size:24px;font-weight:750"></span><button onclick="skipRest()" style="background:rgba(255,255,255,.22);border:none;border-radius:8px;color:#FFFFFF;padding:7px 13px;font-weight:650;font-size:13px">Skip</button></div>
+
+<script>
+const PROGRAM = [{"id":"push","name":"Push","focus":"Chest · Delts · Triceps","warmup":"Foam roll + light DBs (5 min) → 2×15 band pull-aparts → 2–3 ramping sets on incline","exercises":[{"id":"p1","name":"Incline DB Press","sets":4,"reps":"6–8","target":"80 lb","rest":150,"note":"75×8 on all four sets with no drop-off — that means you had more. Last set should slow down."},{"id":"p2","name":"Flat Barbell Bench Press","sets":3,"reps":"8–10","target":"145 lb","rest":120,"note":"Up from 135×10×3."},{"id":"p4","name":"Machine Shoulder Press","sets":4,"reps":"8–10","target":"55 lb","rest":90,"note":"50×8 on all four sets with no fatigue. Step up."},{"id":"p3","name":"Cable Fly (low-to-high)","sets":3,"reps":"12–15","target":"20 lb","rest":75,"note":"Deep stretch at the bottom. Up from 20×15."},{"id":"p5","name":"Cable Lateral Raise","sets":3,"reps":"15–20","target":"10 lb · reps 15→20","rest":60,"note":"Strict. Stack moves in 10s — climb reps to 20 on all sets, then jump to 20 lb and rebuild from 15."},{"id":"p6","name":"Overhead Cable Triceps Ext","sets":3,"reps":"10–12","target":"90 lb · reps 10→12","rest":60,"note":"Reps to 12 on all sets before adding a pin."},{"id":"p7","name":"Rope Pushdown","sets":2,"reps":"12–15","target":"100 lb · reps 12→15","rest":60},{"id":"p8","name":"Hanging Leg Raise (straight)","sets":3,"reps":"10–15","target":"build to 15","rest":60,"mode":"bw"}]},{"id":"pull","name":"Pull","focus":"Back · Rear Delts · Biceps","warmup":"Foam roll + light DBs (5 min) → 2–3 ramping sets on pull-ups","exercises":[{"id":"l1","name":"Weighted Pull-Up","sets":4,"reps":"6–8","target":"+15 lb","rest":150,"note":"DB between the feet or a loaded backpack."},{"id":"l2","name":"Chest-Supported Row / T-Bar","sets":4,"reps":"8–10","target":"build up","rest":120,"note":"New angle. Upper-back thickness."},{"id":"l3","name":"Lat Pulldown (neutral grip)","sets":3,"reps":"10–12","target":"110 lb · reps 10→12","rest":90,"note":"Next pin is 120."},{"id":"l4","name":"Reverse Pec Deck","sets":4,"reps":"15–20","target":"20 lb · reps 15→20","rest":60,"note":"Rep ladder before the load jump — next pin is 30."},{"id":"l5","name":"Incline DB Curl","sets":3,"reps":"8–10","target":"30 lb","rest":60},{"id":"l6","name":"Hammer Curl","sets":3,"reps":"10–12","target":"30 lb","rest":60},{"id":"l7","name":"Cable Crunch","sets":3,"reps":"12–15","target":"120 lb · reps 12→15","rest":60}]},{"id":"legs","name":"Legs","focus":"Quads · Hamstrings · Glutes","warmup":"Foam roll + light DBs (5 min) → 2 light sets leg extension or 20 bodyweight squats — get blood into the knee","exercises":[{"id":"g1","name":"Pendulum / Machine Squat","sets":4,"reps":"8–10","target":"45 lb","rest":150,"note":"1–2 reps in reserve. Not 0 on every set."},{"id":"g2","name":"Barbell RDL","sets":4,"reps":"8–10","target":"95 → 135 lb","rest":150,"note":"The key change. Hip hinge, soft knees, no forward travel."},{"id":"g3","name":"Seated Leg Curl","sets":3,"reps":"12–15","target":"build up","rest":75,"note":"Replaces lying curl — longer muscle length."},{"id":"g4","name":"Leg Press","sets":3,"reps":"10–12","target":"230 lb+","rest":90},{"id":"g5","name":"Barbell Hip Thrust","sets":3,"reps":"8–10","target":"128 lb+","rest":90},{"id":"g6","name":"Standing Calf Raise","sets":4,"reps":"12–15","target":"240 lb","rest":60}]},{"id":"delts","name":"Delts / Arms","focus":"Side Delts · Biceps · Triceps","warmup":"Foam roll + light DBs (5 min) → 2×15 band pull-aparts","exercises":[{"id":"d1","name":"Seated DB Lateral Raise","sets":4,"reps":"12–15","target":"30 lb","rest":60,"note":"Unchanged — 30×15 is already strong."},{"id":"d2","name":"Seated DB Shoulder Press","sets":4,"reps":"8–10","target":"build up","rest":120,"note":"Dumbbells here — Push day covers the machine. Different stimulus."},{"id":"d3","name":"Cable Lateral (single arm)","sets":3,"reps":"20–25","target":"10 lb · reps 20→25","rest":45,"note":"If 25 gets easy and 20 lb is too big a step, slow the lowering to 3 seconds instead."},{"id":"d4","name":"Reverse Pec Deck","sets":3,"reps":"15–20","target":"20 lb · reps 15→20","rest":60},{"id":"d5","name":"EZ Bar Curl","sets":3,"reps":"8–10","target":"35 lb","rest":0,"ss":"A","ssRest":90},{"id":"d6","name":"Close-Grip Bench","sets":3,"reps":"8–10","target":"build up","rest":90,"ss":"A"},{"id":"d7","name":"Cable Curl","sets":3,"reps":"12–15","target":"50 lb · reps 12→15","rest":0,"ss":"B","ssRest":75,"note":"Start at 50 and adjust — you were at 60×8 before."},{"id":"d8","name":"Overhead Rope Extension","sets":3,"reps":"12–15","target":"80 lb · reps 12→15","rest":75,"ss":"B","note":"Lighter than the Push-day version — you are pre-fatigued here."},{"id":"d9","name":"Pallof Press (per side)","sets":3,"reps":"12","target":"20 lb","rest":45,"note":"Anti-rotation. Obliques without the width — no heavy side bends."},{"id":"d10","name":"Cable Crunch","sets":2,"reps":"15","target":"120 lb","rest":60}]},{"id":"chest","name":"Chest + Conditioning","focus":"Upper Chest · Zone 2 · Core","warmup":"Foam roll + light DBs (5 min) → 2×15 band pull-aparts","exercises":[{"id":"c1","name":"Zone 2 Cardio","sets":1,"reps":"30 min","target":"conversational","rest":0,"mode":"time","note":"Incline walk 12–15%, bike, or row."},{"id":"c2","name":"Incline DB Press","sets":3,"reps":"10–12","target":"moderate","rest":90,"note":"Always take the incline option — upper chest is the visual gap."},{"id":"c3","name":"Cable Fly","sets":2,"reps":"15","target":"20 lb","rest":60},{"id":"c4","name":"Straight-Arm Pulldown","sets":3,"reps":"12–15","target":"40 lb · reps 12→15","rest":60,"note":"Moved here so back gets trained twice a week."},{"id":"c5","name":"Back Extension","sets":3,"reps":"15","target":"add load","rest":60},{"id":"c6","name":"Hanging Leg Raise / Decline Sit-up","sets":3,"reps":"12–15","target":"weighted","rest":60,"mode":"bw"},{"id":"c7","name":"Serratus Punches","sets":2,"reps":"15","target":"light","rest":45,"note":"Optional. Pays off around 14%."},{"id":"c8","name":"Intervals — 20s on / 40s off","sets":8,"reps":"20s","target":"hard","rest":40,"mode":"time","note":"Once per week only. Skip on the other days."}]}];
+const FORM = {"p1":{"setup":"Bench at 30–45°. Dumbbells resting on your thighs, kick them up one at a time as you lie back.","execute":"Lower until your elbows are just below torso level and you feel the stretch across the upper chest. Press up and slightly inward. Elbows tucked ~45° from your body, not flared to 90°.","avoid":"Bouncing off the chest, or setting the bench so steep it becomes a shoulder press. 30° is plenty."},"p2":{"setup":"Eyes under the bar. Shoulder blades pinched back and down into the bench, small arch in the lower back, feet planted.","execute":"Lower to mid-chest with control, elbows ~45°. Drive through the floor as you press.","avoid":"Letting your shoulder blades unpinch at the top — that's where pec and shoulder strains come from."},"p3":{"setup":"Cables set at the LOWEST pin. Stand in the middle, one foot slightly forward, slight bend in the elbows that never changes.","execute":"Start with hands low and wide. Sweep up and together as if hugging a barrel, finishing at upper-chest height. Squeeze for a beat.","avoid":"Turning it into a press by bending the elbows. The elbow angle is locked the whole set — that's what keeps tension on the pec."},"p4":{"setup":"Adjust the seat so the handles sit level with your shoulders — too low and it becomes a chest press, too high and you lose range. Back flat against the pad.","execute":"Press to near lockout without slamming. Lower under control until your upper arms are level with your shoulders.","avoid":"Arching your lower back off the pad to grind out a rep, and cutting the bottom of the range short."},"p5":{"setup":"Cable at the lowest pin, handle in the hand furthest from the machine, cable crossing in front of your body.","execute":"Raise out to the side to shoulder height, leading with your elbow. Pause. Lower slowly — the negative is where most of the growth is.","avoid":"Swinging. If your torso rocks to get the weight up, drop to 10 lb."},"p6":{"setup":"Rope on a high pulley. Face away, staggered stance, hinge forward slightly. Rope behind your head, elbows pointing forward.","execute":"Extend at the elbow until your arms are straight, spreading the rope at the end. Let the weight pull your hands back behind your head for a full stretch.","avoid":"Letting your elbows drift outward or downward. They stay high and fixed."},"p7":{"setup":"Rope on a high pulley. Elbows pinned to your ribs, slight forward lean.","execute":"Push down and spread the rope apart at the bottom. Full lockout.","avoid":"Using your shoulders to push the weight down. Only the elbow joint moves."},"p8":{"setup":"Hang from a bar, shoulders active (not fully relaxed). Straight legs.","execute":"Curl your pelvis up toward your ribs and raise your legs — the pelvic tilt is the actual ab work, the leg raise is mostly hip flexor.","avoid":"Swinging. If you can't control it, do knee raises until you can, then progress."},"l1":{"setup":"Dumbbell held between your feet or a loaded backpack. Grip slightly wider than shoulders, palms forward.","execute":"Pull your elbows down and back, driving your chest toward the bar. Chin over the bar. Lower under control to a full hang.","avoid":"Half reps. A full stretch at the bottom is where lat width comes from."},"l2":{"setup":"Chest against the pad, feet planted. Set the pad so your arms can fully extend without your chest lifting off.","execute":"Pull the handles toward your lower ribs, driving your elbows back and squeezing your shoulder blades together. Pause at the contraction.","avoid":"Heaving your chest off the pad. If it lifts, the weight is too heavy — the pad is what makes this exercise honest."},"l3":{"setup":"Neutral (palms-facing) grip. Thighs locked under the pad, slight backward lean of about 15°.","execute":"Pull to your upper chest, elbows driving down toward your hips. Control the way up until your lats are fully stretched.","avoid":"Leaning back into a row. A little lean is fine, swinging is not."},"l4":{"setup":"Chest on the pad, arms extended forward at shoulder height, slight elbow bend.","execute":"Sweep your arms out and back in a wide arc, leading with your elbows. Squeeze the rear delts, then return slowly.","avoid":"Using your traps and biceps. Think of your hands as hooks — the elbows do the travelling."},"l5":{"setup":"Bench at 45–60°. Sit back fully so your arms hang BEHIND your torso. That hanging position is the whole point.","execute":"Curl up without letting your elbow drift forward. Lower all the way until your arm is straight and you feel the biceps stretch.","avoid":"Letting your shoulder roll forward at the bottom. Keep your chest up and shoulders back on the bench."},"l6":{"setup":"Neutral grip, palms facing each other, dumbbells at your sides.","execute":"Curl straight up keeping the palms facing in the whole way. Elbows stay pinned to your ribs.","avoid":"Rotating the wrist. Hammer grip throughout — that's what hits the brachialis and thickens the arm."},"l7":{"setup":"Kneel facing a high cable with a rope. Rope beside your head or at your temples. Hips stay fixed.","execute":"Crunch by rounding your spine and bringing your ribs toward your pelvis. Your elbows travel toward your thighs.","avoid":"Hinging at the hips instead of flexing your spine. If your back stays flat, you're doing a hip movement, not an ab one."},"g1":{"setup":"Feet on the platform shoulder-width, shoulders under the pads, back flat against the backrest.","execute":"Descend under control to at least parallel, keeping tension in the quads. Drive up through mid-foot.","avoid":"Going to true failure on every set. Stop at 1–2 reps in reserve — especially with your knee."},"g2":{"setup":"Barbell at hip height, feet hip-width, knees SOFT and fixed. Bar stays in contact with your legs the whole way.","execute":"Push your hips straight back, letting the bar slide down your thighs. Stop when your hamstrings are fully stretched — usually mid-shin. Drive your hips forward to stand.","avoid":"Bending the knees more as you descend (that turns it into a deadlift), or rounding the lower back. If your knees hurt on this, the setup is wrong — it should be almost entirely hips."},"g3":{"setup":"Back against the pad, thigh pad clamped down, knees aligned with the machine's pivot.","execute":"Curl your heels down and under, squeeze the hamstrings hard, return slowly.","avoid":"Letting your hips lift off the seat to gain leverage."},"g4":{"setup":"Feet shoulder-width, mid-platform. Back and hips flat against the seat.","execute":"Lower until your knees reach roughly 90°, then press through your heels without locking out hard at the top.","avoid":"Letting your lower back round off the pad at the bottom — that's the most common way people hurt themselves on this machine."},"g5":{"setup":"Upper back on a bench, bar across your hips with a pad. Feet flat, shins vertical at the top.","execute":"Drive through your heels until your torso is parallel to the floor. Squeeze the glutes hard at the top, ribs down.","avoid":"Hyperextending your lower back at the top. The movement ends when your hips are level, not higher."},"g6":{"setup":"Balls of your feet on the platform, heels hanging free.","execute":"Drop your heels for a full stretch, pause a beat at the bottom, then press all the way up onto your toes.","avoid":"Bouncing. Calves respond to the stretch and the pause, not to speed."},"d1":{"setup":"Seated, upright, dumbbells at your sides, tiny bend in the elbows.","execute":"Raise out to the side to shoulder height, pinkies very slightly higher than thumbs. Lower slowly.","avoid":"Going above shoulder height — past that the traps take over and the side delt stops working."},"d2":{"setup":"Upright bench, back supported. Dumbbells at shoulder height, palms forward, wrists stacked over elbows.","execute":"Press up until nearly locked without clanging the bells together. Lower until your upper arms reach shoulder level.","avoid":"Arching off the bench to grind a rep. Dumbbells demand more stability than the machine — expect to use less weight."},"d3":{"setup":"One arm at a time, cable at the lowest pin, standing side-on so the cable crosses your body.","execute":"Raise to shoulder height leading with the elbow. Cables keep tension at the bottom where dumbbells lose it — that's why both are in the program.","avoid":"Leaning away from the machine to cheat the weight up."},"d4":{"setup":"Chest on the pad, arms extended, slight elbow bend.","execute":"Sweep out and back in a wide arc, elbows leading, squeeze, return slowly.","avoid":"Shrugging your shoulders up toward your ears."},"d5":{"setup":"EZ bar, shoulder-width on the angled grips. Elbows pinned to your ribs. Set the bar down next to the bench before you start so you are not crossing the gym mid-round.","execute":"Curl up, squeeze, lower under full control. ","avoid":"Swinging your hips to start the rep."},"d6":{"setup":"Bench, hands about shoulder-width — NOT narrower, that just wrecks your wrists.","execute":"Lower to your lower chest with elbows tucked tight to your sides. Press up. ","avoid":"Flaring your elbows. Tucked elbows are what make it a triceps exercise."},"d7":{"setup":"Straight bar or rope on a low pulley.","execute":"Curl up with elbows fixed at your sides. Squeeze at the top. ","avoid":"Letting your elbows travel forward as you curl."},"d8":{"setup":"Rope on a high pulley, facing away, hinged slightly forward.","execute":"Extend fully, spreading the rope. Let your hands drop behind your head for the stretch. ","avoid":"Dropping the elbows. They stay high and pointed forward."},"d9":{"setup":"Cable at chest height. Stand SIDE-ON to the machine, feet shoulder-width, knees soft. Both hands on the handle at your sternum. Step away until there is real tension.","execute":"Press your hands straight out until your arms lock. The cable is now trying to rotate you toward the machine — resist it. Hold 2–3 seconds, return to your chest. All reps one side, then turn around.","avoid":"Any twist at all. If your torso rotates, it's too heavy. Brace your abs, squeeze your glutes, keep breathing. This is the one exercise where nothing should visibly move."},"d10":{"setup":"Kneel facing a high cable, rope at your temples, hips fixed.","execute":"Round your spine, bringing ribs toward pelvis.","avoid":"Hinging at the hips instead of flexing the spine."},"c1":{"setup":"Treadmill at 12–15% incline, or a bike or rower.","execute":"Conversational pace — you should be able to speak in full sentences but not comfortably sing. 30 minutes.","avoid":"Pushing the pace. Going harder here eats into recovery and defeats the purpose."},"c2":{"setup":"Bench at 30–45°. Take the incline option every time on this day.","execute":"Lower to a stretch, press up and slightly in. Higher reps than Monday — chase the pump here, not the load.","avoid":"Substituting a flat press. Upper chest is the visual gap; this session exists for it."},"c3":{"setup":"Cables low, slight fixed elbow bend.","execute":"Sweep up and together, squeeze, control the way back to a full stretch.","avoid":"Pressing instead of flying."},"c4":{"setup":"High cable, straight bar or rope. Stand back, hinge slightly forward, arms overhead and straight.","execute":"Keeping your arms straight, pull the bar down in an arc to your thighs using only your lats. Squeeze at the bottom.","avoid":"Bending the elbows — that turns it into a pushdown and the lats stop working."},"c5":{"setup":"Hips on the pad, feet secured, body straight.","execute":"Hinge down until you feel the hamstring stretch, then raise until your body is straight. Hold a plate to your chest to add load.","avoid":"Hyperextending past straight at the top."},"c6":{"setup":"Hang from a bar, or decline bench with a plate held at your chest.","execute":"Curl the pelvis toward the ribs. Add weight once 15 reps is comfortable.","avoid":"Swinging for momentum."},"c7":{"setup":"Light cable or band at chest height, standing facing away.","execute":"Punch straight forward, letting your shoulder blade slide FORWARD around your ribcage at the end. That protraction is the whole exercise.","avoid":"Treating it as a chest press. The range that matters is the last few inches."},"c8":{"setup":"Bike, rower, or treadmill. After your zone 2.","execute":"20 seconds hard, 40 seconds easy, eight rounds.","avoid":"Doing this more than once a week. It costs recovery you need for lifting."}};
+const TRIPS = [{"name":"Bahamas","date":"2026-10-08"},{"name":"Amsterdam","date":"2026-11-09"},{"name":"Brazil","date":"2026-12-02"}];
+
+/* ---------- storage: synchronous localStorage, cannot half-fail ---------- */
+const K_HIST='shredlog.history', K_ACT='shredlog.active', K_BAK='shredlog.backup';
+function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+function del(k){try{localStorage.removeItem(k)}catch(e){}}
+
+let history_=load(K_HIST,[]);
+let active=load(K_ACT,null)||load(K_BAK,null);
+let view=active?'workout':'home';
+let openEx=null, restLeft=null, restTimer=null, wakeLock=null, restored=!!active;
+
+function persist(){ if(active){save(K_ACT,active);save(K_BAK,active);} }
+
+/* ---------- helpers ---------- */
+const pad=n=>String(n).padStart(2,'0');
+const clock=s=>Math.floor(s/60)+':'+pad(s%60);
+const today=()=>new Date().toISOString().slice(0,10);
+const daysTo=d=>Math.max(0,Math.round((new Date(d+'T00:00:00')-new Date(today()+'T00:00:00'))/864e5));
+const pretty=d=>new Date(d+'T00:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function groupEx(list){const out=[];list.forEach(ex=>{const p=out[out.length-1];if(ex.ss&&p&&p.ss===ex.ss)p.items.push(ex);else out.push({ss:ex.ss||null,items:[ex]})});return out}
+function best(rows){const d=(rows||[]).filter(r=>r.done&&r.reps);if(!d.length)return null;return d.reduce((a,b)=>(+(b.weight||0)>+(a.weight||0)?b:a));}
+function lastFor(day,ex){for(let i=history_.length-1;i>=0;i--){const s=history_[i];if(s.dayId===day&&s.entries[ex]){const b=best(s.entries[ex]);if(b)return b;}}return null;}
+function lastDone(day){for(let i=history_.length-1;i>=0;i--)if(history_[i].dayId===day)return history_[i].date;return null;}
+
+/* ---------- wake lock ---------- */
+async function getWake(){try{if('wakeLock'in navigator)wakeLock=await navigator.wakeLock.request('screen')}catch(e){}}
+function dropWake(){try{wakeLock&&wakeLock.release();wakeLock=null}catch(e){}}
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){persist()}
+  else if(active)getWake();
+});
+window.addEventListener('pagehide',persist);
+window.addEventListener('beforeunload',persist);
+
+/* ---------- actions ---------- */
+function start(id){
+  const day=PROGRAM.find(d=>d.id===id);
+  const entries={};
+  day.exercises.forEach(ex=>{entries[ex.id]=Array.from({length:ex.sets},()=>({weight:'',reps:'',done:false}))});
+  active={dayId:id,dayName:day.name,date:today(),startedAt:Date.now(),entries};
+  restored=false;persist();getWake();view='workout';render();
+}
+function resume(){view='workout';getWake();render()}
+function setField(ex,i,f,v){active.entries[ex][i][f]=v;persist()}
+function toggle(exId,i){
+  const day=PROGRAM.find(d=>d.id===active.dayId);
+  const ex=day.exercises.find(e=>e.id===exId);
+  const r=active.entries[exId][i];
+  r.done=!r.done;persist();
+  if(r.done&&ex.rest>0)startRest(ex.rest);
+  render();
+}
+function addSet(ex){active.entries[ex].push({weight:'',reps:'',done:false});persist();render()}
+function toggleForm(id){openEx=openEx===id?null:id;render()}
+function startRest(s){restLeft=s;clearInterval(restTimer);restTimer=setInterval(()=>{restLeft--;if(restLeft<=0){skipRest();return}paintRest()},1000);paintRest()}
+function skipRest(){clearInterval(restTimer);restLeft=null;document.getElementById('rest').style.display='none'}
+function paintRest(){const e=document.getElementById('rest');if(restLeft===null){e.style.display='none';return}e.style.display='flex';document.getElementById('restT').textContent=clock(restLeft)}
+function finish(){
+  const dur=Math.floor((Date.now()-active.startedAt)/1000);
+  const cleaned={dayId:active.dayId,dayName:active.dayName,date:active.date,durationSec:dur,entries:{}};
+  Object.entries(active.entries).forEach(([k,rows])=>{const kept=rows.filter(r=>r.done||r.reps||r.weight);if(kept.length)cleaned.entries[k]=kept});
+  history_.push(cleaned);
+  if(!save(K_HIST,history_)){history_.pop();saveFailed=true;render();return}
+  del(K_ACT);del(K_BAK);active=null;skipRest();dropWake();view='home';render();
+}
+let confirmDiscard=false, saveFailed=false;
+function discardTap(){
+  if(!confirmDiscard){confirmDiscard=true;render();setTimeout(()=>{if(confirmDiscard){confirmDiscard=false;render()}},4000);return}
+  confirmDiscard=false;
+  del(K_ACT);del(K_BAK);active=null;skipRest();dropWake();view='home';render();
+}
+function go(v){view=v;render()}
+function exportText(){
+  if(!history_.length)return'No sessions logged yet.';
+  const out=['SHREDLOG EXPORT',''];
+  history_.forEach(s=>{
+    const day=PROGRAM.find(d=>d.id===s.dayId);
+    out.push('## '+s.dayName+' — '+s.date+(s.durationSec?'  ('+Math.round(s.durationSec/60)+' min)':''));
+    Object.entries(s.entries).forEach(([id,rows])=>{
+      const ex=day&&day.exercises.find(e=>e.id===id);
+      out.push('- '+(ex?ex.name:id)+': '+rows.map(r=>r.weight?r.weight+'×'+(r.reps||'?'):(r.reps||'?')).join(', '));
+    });
+    out.push('');
+  });
+  return out.join('\n');
+}
+function copyExp(){
+  const t=document.getElementById('exp');t.select();t.setSelectionRange(0,99999);
+  try{navigator.clipboard.writeText(t.value)}catch(e){document.execCommand('copy')}
+  const b=document.getElementById('cpy');b.textContent='Copied';setTimeout(()=>b.textContent='Copy to clipboard',2000);
+}
+
+/* ---------- render ---------- */
+function render(){
+  const a=document.getElementById('app');
+  if(view==='workout'&&active)a.innerHTML=viewWorkout();
+  else if(view==='history')a.innerHTML=viewHistory();
+  else if(view==='export')a.innerHTML=viewExport();
+  else a.innerHTML=viewHome();
+  paintRest();
+}
+
+function viewHome(){
+  const next=TRIPS.find(t=>daysTo(t.date)>0)||TRIPS[TRIPS.length-1];
+  return '<div class="wrap">'+
+  '<div style="margin-bottom:18px"><div style="font-size:26px;font-weight:750;letter-spacing:-.03em">ShredLog</div><div class="dim" style="font-size:12.5px;margin-top:3px">5-day split · works offline</div></div>'+
+  '<div style="display:flex;gap:8px;margin-bottom:20px">'+TRIPS.map(t=>{
+    const d=daysTo(t.date),on=t.name===next.name;
+    return '<div style="flex:1;background:'+(on?'var(--card2)':'var(--card)')+';border:1px solid '+(on?'var(--gold)':'var(--line)')+';border-radius:10px;padding:10px 8px;text-align:center"><div style="font-size:22px;font-weight:750;line-height:1.1;color:'+(on?'var(--gold)':'var(--text)')+'">'+d+'</div><div class="lbl" style="margin-top:3px">'+t.name.toUpperCase()+'</div></div>';
+  }).join('')+'</div>'+
+  (active?'<button onclick="resume()" class="card" style="width:100%;text-align:left;border-color:var(--green);background:var(--card2);cursor:pointer;color:var(--text)"><div class="green" style="font-size:11px;letter-spacing:.08em;margin-bottom:4px">IN PROGRESS</div><div style="font-size:16.5px;font-weight:700">Resume '+esc(active.dayName)+'</div></button>':'')+
+  '<div class="lbl" style="margin-bottom:10px">START WORKOUT</div>'+
+  PROGRAM.map(d=>{
+    const l=lastDone(d.id),sets=d.exercises.reduce((a,e)=>a+e.sets,0);
+    return '<button onclick="start(\''+d.id+'\')" class="card" style="width:100%;text-align:left;cursor:pointer;color:var(--text);display:block">'+
+    '<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:16.5px;font-weight:700;letter-spacing:-.02em">'+esc(d.name)+'</span><span style="font-size:11.5px" class="'+(l?'dim':'gold')+'">'+(l?pretty(l):'Never')+'</span></div>'+
+    '<div class="dim" style="font-size:12.5px;margin-top:4px">'+esc(d.focus)+'</div>'+
+    '<div class="dim" style="font-size:11.5px;margin-top:6px">'+d.exercises.length+' exercises · '+sets+' sets</div></button>';
+  }).join('')+
+  '<div style="display:flex;gap:10px;margin-top:14px"><button class="btn bgrey" style="flex:1" onclick="go(\'history\')">History</button><button class="btn bgold" style="flex:1" onclick="go(\'export\')">Export</button></div>'+
+  '</div>';
+}
+
+function viewWorkout(){
+  const day=PROGRAM.find(d=>d.id===active.dayId);
+  const rowsAll=Object.values(active.entries);
+  const tot=rowsAll.reduce((a,r)=>a+r.length,0), done=rowsAll.reduce((a,r)=>a+r.filter(x=>x.done).length,0);
+  const el=Math.floor((Date.now()-active.startedAt)/1000);
+  let h='<div class="hdr"><div style="display:flex;justify-content:space-between;align-items:baseline">'+
+  '<div><div style="font-size:19px;font-weight:700;letter-spacing:-.02em">'+esc(day.name)+'</div><div class="dim" style="font-size:12px;margin-top:2px">'+esc(day.focus)+'</div></div>'+
+  '<div style="text-align:right"><div class="gold" style="font-size:22px;font-weight:700" id="elapsed">'+clock(el)+'</div><div style="margin-top:2px"><span class="dim" style="font-size:11px">'+done+'/'+tot+' sets</span> <span class="dot"></span></div></div>'+
+  '</div><div class="bar"><div style="width:'+(tot?Math.round(done/tot*100):0)+'%"></div></div></div><div class="wrap" style="padding-bottom:110px">';
+
+  if(saveFailed)h+='<div class="card" style="border-color:var(--danger);background:var(--dangerbg);color:var(--dangertext);font-size:12.5px;line-height:1.5"><strong>Could not save.</strong> Write your numbers down before leaving this screen, then tap Finish again.</div>';
+  if(restored)h+='<div class="card" style="border-color:var(--green);background:var(--card2);color:var(--green);font-size:12.5px">Picked your session back up where you left it.</div>';
+  h+='<div class="card" style="background:var(--card2);border-left:3px solid var(--blue);font-size:12.5px;line-height:1.55"><strong style="font-size:11.5px;letter-spacing:.06em">WARM-UP</strong><div class="dim" style="margin-top:4px">'+esc(day.warmup)+'</div></div>';
+  h+='<div class="card" style="background:var(--card2);border-left:3px solid var(--goldfill);font-size:12.5px;line-height:1.55"><strong style="font-size:11.5px;letter-spacing:.06em">HOW TO PROGRESS</strong><div class="dim" style="margin-top:4px">Reach the top of the rep range on every set first. Only then add load, and drop back to the bottom of the range.</div><div class="dim" style="margin-top:6px">Your cable stacks move in 10 lb steps, which is a big jump on light isolation work. The rep ladder is how you bridge it. Stuck between pins? Slow the lowering to 3 seconds, pause a beat at the top, or step further from the machine.</div></div>';
+
+  const card=(ex)=>{
+    let h='';
+    const rows=active.entries[ex.id]||[], prev=lastFor(day.id,ex.id), f=FORM[ex.id];
+    h+='<div class="card" style="margin-bottom:'+(ex.ss?7:12)+'px">'+
+    '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">'+
+    '<button class="exname" onclick="toggleForm(\''+ex.id+'\')">'+esc(ex.name)+'<span class="q">?</span></button>'+
+    '<div class="gold" style="font-size:12.5px;font-weight:650;white-space:nowrap">'+ex.sets+' × '+esc(ex.reps)+'</div></div>'+
+    '<div style="display:flex;gap:14px;margin-top:5px;font-size:12px;flex-wrap:wrap">'+
+    '<span class="dim">Target <span style="color:var(--text)">'+esc(ex.target)+'</span></span>'+
+    (prev?'<span class="dim">Last <span class="blue">'+(prev.weight?prev.weight+'×'+prev.reps:prev.reps+' reps')+'</span></span>':'')+
+    (ex.rest>0?'<span class="dim">Rest '+clock(ex.rest)+'</span>':'')+'</div>'+
+    (ex.note?'<div class="dim" style="font-size:12px;margin-top:8px;line-height:1.5;font-style:italic">'+esc(ex.note)+'</div>':'');
+
+    if(openEx===ex.id&&f){
+      h+='<div class="form">'+
+      [['SET UP',f.setup,'var(--dim)'],['EXECUTE',f.execute,'var(--text)'],['AVOID',f.avoid,'var(--gold)']].map(x=>
+        '<div style="margin-bottom:10px"><div class="ftag" style="color:'+x[2]+'">'+x[0]+'</div><div class="dim">'+esc(x[1])+'</div></div>').join('')+
+      '<a target="_blank" rel="noopener" style="font-size:12px;text-decoration:none;font-weight:600" href="https://www.youtube.com/results?search_query='+encodeURIComponent(ex.name+' proper form')+'">Watch a demo →</a></div>';
+    }
+
+    h+='<div style="margin-top:12px"><div class="row"><span class="lbl">SET</span><span class="lbl" style="text-align:center">'+(ex.mode==='time'?'MIN':'LB')+'</span><span class="lbl" style="text-align:center">REPS</span><span></span></div>';
+    rows.forEach((r,i)=>{
+      h+='<div class="row" style="opacity:'+(r.done?.55:1)+'"><span class="dim" style="font-size:13px">'+(i+1)+'</span>'+
+      '<input class="inp" type="number" inputmode="decimal" value="'+esc(r.weight)+'" oninput="setField(\''+ex.id+'\','+i+',\'weight\',this.value)">'+
+      '<input class="inp" type="number" inputmode="numeric" value="'+esc(r.reps)+'" oninput="setField(\''+ex.id+'\','+i+',\'reps\',this.value)">'+
+      '<button class="chk'+(r.done?' on':'')+'" onclick="toggle(\''+ex.id+'\','+i+')">✓</button></div>';
+    });
+    h+='<button onclick="addSet(\''+ex.id+'\')" style="background:none;border:1px dashed var(--line);border-radius:8px;color:var(--dim);padding:7px 0;width:100%;font-size:12.5px;cursor:pointer;margin-top:2px">+ Add set</button></div></div>';
+    return h;
+  };
+
+  groupEx(day.exercises).forEach((grp,gi)=>{
+    if(!grp.ss){h+=card(grp.items[0]);return}
+    const lead=grp.items[0];
+    h+='<div style="border:1px solid color-mix(in srgb,var(--blue) 28%,transparent);border-left:4px solid var(--blue);border-radius:14px;background:color-mix(in srgb,var(--blue) 5%,transparent);padding:12px 11px 11px;margin-bottom:12px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 9px">'+
+      '<span style="color:var(--blue);font-size:10.5px;font-weight:750;letter-spacing:.11em">SUPERSET '+grp.ss+'</span>'+
+      '<span style="color:var(--blue);font-size:11px;font-weight:600">'+lead.sets+' rounds · no rest between</span></div>';
+    grp.items.forEach((ex,ei)=>{
+      if(ei>0)h+='<div style="display:flex;align-items:center;gap:8px;padding:1px 4px 7px"><span style="color:var(--blue);font-size:13px;font-weight:700">↓</span><span style="color:var(--blue);font-size:11px;font-weight:600">straight into</span><div style="flex:1;height:1px;background:color-mix(in srgb,var(--blue) 22%,transparent)"></div></div>';
+      h+=card(ex);
+    });
+    h+='<div class="dim" style="font-size:11.5px;padding:2px 4px 0;line-height:1.5">Rest '+clock(lead.ssRest||90)+' after the pair, then start the next round.</div></div>';
+  });
+
+  h+='<div style="display:flex;gap:10px;margin-top:6px"><button class="btn bgold" style="flex:2" onclick="finish()">Finish workout</button><button class="btn" style="flex:1;background:'+(confirmDiscard?'var(--danger)':'var(--card2)')+';color:'+(confirmDiscard?'#FFFFFF':'var(--dim)')+';font-size:'+(confirmDiscard?13:15)+'px" onclick="discardTap()">'+(confirmDiscard?'Tap to confirm':'Discard')+'</button></div></div>';
+  return h;
+}
+
+function viewHistory(){
+  let h='<div class="wrap"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="btn bgrey" style="padding:7px 12px" onclick="go(\'home\')">←</button><span style="font-size:19px;font-weight:700">History</span></div>';
+  if(!history_.length)h+='<div class="dim" style="font-size:14px;padding:28px 0">Nothing logged yet.</div>';
+  history_.slice().reverse().forEach(s=>{
+    const day=PROGRAM.find(d=>d.id===s.dayId);
+    h+='<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><strong style="font-size:15px">'+esc(s.dayName)+'</strong><span class="dim" style="font-size:13px">'+pretty(s.date)+(s.durationSec?' · '+Math.round(s.durationSec/60)+'m':'')+'</span></div>';
+    Object.entries(s.entries).forEach(([id,rows])=>{
+      const ex=day&&day.exercises.find(e=>e.id===id), b=best(rows);
+      h+='<div class="dim" style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>'+esc(ex?ex.name:id)+'</span><span style="color:var(--text)">'+(b?(b.weight?b.weight+' × '+b.reps:b.reps+' reps'):'—')+'</span></div>';
+    });
+    h+='</div>';
+  });
+  return h+'</div>';
+}
+
+function viewExport(){
+  return '<div class="wrap"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="btn bgrey" style="padding:7px 12px" onclick="go(\'home\')">←</button><span style="font-size:19px;font-weight:700">Export</span></div>'+
+  '<p class="dim" style="font-size:13px;line-height:1.55;margin:0 0 14px">Copy this and paste it into the chat.</p>'+
+  '<textarea id="exp" readonly>'+esc(exportText())+'</textarea>'+
+  '<button id="cpy" class="btn bgold" style="width:100%;margin-top:12px" onclick="copyExp()">Copy to clipboard</button></div>';
+}
+
+setInterval(()=>{
+  if(view==='workout'&&active){
+    const e=document.getElementById('elapsed');
+    if(e)e.textContent=clock(Math.floor((Date.now()-active.startedAt)/1000));
+  }
+},1000);
+
+if(active)getWake();
+render();
+</script>
+</body>
+</html>
