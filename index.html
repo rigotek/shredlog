@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#F4F6F9">
 <title>ShredLog</title>
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F0B429'/%3E%3Ctext x='50' y='68' font-size='58' font-family='system-ui' font-weight='bold' fill='%23151A21' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
@@ -14,7 +14,7 @@
 body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;font-variant-numeric:tabular-nums;padding-bottom:env(safe-area-inset-bottom)}
 button{font-family:inherit}
 input{font-family:inherit;font-variant-numeric:tabular-nums}
-.wrap{max-width:640px;margin:0 auto;padding:18px}
+.wrap{max-width:640px;margin:0 auto;padding:18px;padding-top:calc(18px + env(safe-area-inset-top))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px;margin-bottom:10px}
 .dim{color:var(--dim)}
 .gold{color:var(--gold)}
@@ -33,7 +33,7 @@ input{font-family:inherit;font-variant-numeric:tabular-nums}
 .form{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:13px;margin-top:10px;font-size:12.5px;line-height:1.6}
 .ftag{font-size:10px;letter-spacing:.1em;font-weight:700;margin-bottom:3px}
 #rest{position:fixed;left:0;right:0;bottom:0;background:var(--blue);color:#FFFFFF;padding:13px 18px;padding-bottom:calc(13px + env(safe-area-inset-bottom));display:none;justify-content:space-between;align-items:center;z-index:50}
-.hdr{background:var(--card);border-bottom:1px solid var(--line);padding:16px 18px 12px;position:sticky;top:0;z-index:40}
+.hdr{background:var(--card);border-bottom:1px solid var(--line);padding:16px 18px 12px;padding-top:calc(16px + env(safe-area-inset-top));position:sticky;top:0;z-index:40}
 .bar{height:3px;background:var(--line);border-radius:2px;margin-top:12px;overflow:hidden}
 .bar>div{height:100%;background:var(--goldfill);transition:width .25s}
 .dot{width:7px;height:7px;border-radius:7px;background:var(--green);display:inline-block}
@@ -341,10 +341,47 @@ function viewHistory(){
   return h+'</div>';
 }
 
+function exportText(){
+  if(!history_.length) return 'No sessions logged yet.';
+  const out=['SHREDLOG EXPORT',''];
+  history_.forEach(s=>{
+    const day=PROGRAM.find(d=>d.id===s.dayId);
+    out.push('## '+s.dayName+' — '+s.date+(s.durationSec?'  ('+Math.round(s.durationSec/60)+' min)':''));
+    Object.entries(s.entries).forEach(([id,rows])=>{
+      const ex=day&&day.exercises.find(e=>e.id===id);
+      const body=rows.map(r=>r.weight?(r.weight+'×'+(r.reps||'?')):(r.reps||'?')).join(', ');
+      out.push('- '+(ex?ex.name:id)+': '+body);
+    });
+    out.push('');
+  });
+  return out.join(String.fromCharCode(10));
+}
+
+function copyExp(){
+  const t=document.getElementById('exp');
+  const btn=document.getElementById('cpy');
+  const done=ok=>{ if(!btn)return; btn.textContent=ok?'Copied':'Select all & copy manually'; setTimeout(()=>{btn.textContent='Copy to clipboard';},2200); };
+  if(!t){done(false);return;}
+  t.focus(); t.select(); try{t.setSelectionRange(0,999999);}catch(e){}
+  // Path 1: async clipboard API (needs HTTPS + permission)
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t.value).then(()=>done(true)).catch(()=>{
+      // Path 2: legacy execCommand
+      let ok=false; try{ok=document.execCommand('copy');}catch(e){}
+      done(ok);
+    });
+    return;
+  }
+  // Path 2 only
+  let ok=false; try{ok=document.execCommand('copy');}catch(e){}
+  done(ok);
+}
+
+
 function viewExport(){
   return '<div class="wrap"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="btn bgrey" style="padding:7px 12px" onclick="go(\'home\')">←</button><span style="font-size:19px;font-weight:700">Export</span></div>'+
-  '<p class="dim" style="font-size:13px;line-height:1.55;margin:0 0 14px">Copy this and paste it into the chat.</p>'+
-  '<textarea id="exp" readonly>'+esc(exportText())+'</textarea>'+
+  '<p class="dim" style="font-size:13px;line-height:1.55;margin:0 0 14px">Tap Copy, then paste into the chat. If copy does nothing, long-press the text below and choose Select All → Copy.</p>'+
+  '<textarea id="exp" readonly style="min-height:300px">'+esc(exportText())+'</textarea>'+
   '<button id="cpy" class="btn bgold" style="width:100%;margin-top:12px" onclick="copyExp()">Copy to clipboard</button></div>';
 }
 
