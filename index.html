@@ -10,9 +10,9 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F0B429'/%3E%3Ctext x='50' y='68' font-size='58' font-family='system-ui' font-weight='bold' fill='%23151A21' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--bg:#F4F6F9;--card:#FFFFFF;--card2:#EAEEF3;--line:#D7DEE7;--text:#151A21;--dim:#5F6B7A;--gold:#B07900;--goldfill:#F0B429;--blue:#2563EB;--green:#15803D;--danger:#DC2626;--dangerbg:#FEF2F2;--dangertext:#991B1B}
 body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;font-variant-numeric:tabular-nums;padding-bottom:env(safe-area-inset-bottom)}
-button{font-family:inherit}
+:root{--bg:#F4F6F9;--card:#FFFFFF;--card2:#EAEEF3;--line:#D7DEE7;--text:#151A21;--dim:#5F6B7A;--gold:#B07900;--goldfill:#F0B429;--blue:#2563EB;--green:#15803D;--danger:#DC2626;--dangerbg:#FEF2F2;--dangertext:#991B1B}
+button{font-family:inherit;border:none}
 input{font-family:inherit;font-variant-numeric:tabular-nums}
 .wrap{max-width:640px;margin:0 auto;padding:18px;padding-top:calc(18px + env(safe-area-inset-top))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px;margin-bottom:10px}
@@ -20,195 +20,338 @@ input{font-family:inherit;font-variant-numeric:tabular-nums}
 .gold{color:var(--gold)}
 .blue{color:var(--blue)}
 .green{color:var(--green)}
-.btn{border:none;border-radius:10px;padding:12px 16px;font-size:15px;font-weight:650;cursor:pointer}
+.btn{border-radius:10px;padding:12px 16px;font-size:15px;font-weight:650;cursor:pointer;border:none}
 .bgold{background:var(--goldfill);color:var(--text)}
 .bgrey{background:var(--card2);color:var(--text)}
 .row{display:grid;grid-template-columns:26px 1fr 1fr 44px;gap:8px;align-items:center;margin-bottom:7px}
-.inp{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);padding:10px 8px;font-size:16px;text-align:center;outline:none}
+.inp{width:100%;background:#fff;border:1px solid var(--line);border-radius:8px;color:var(--text);padding:10px 8px;font-size:16px;text-align:center;outline:none}
 .chk{background:var(--card2);border:1px solid var(--line);border-radius:8px;color:var(--dim);padding:10px 0;font-size:15px;font-weight:700;cursor:pointer;width:100%}
 .chk.on{background:var(--green);border-color:var(--green);color:#FFFFFF}
 .lbl{font-size:10.5px;letter-spacing:.06em;color:var(--dim)}
 .exname{background:none;border:none;padding:0;text-align:left;cursor:pointer;color:var(--text);font-size:15.5px;font-weight:650;display:flex;align-items:center;gap:7px}
 .q{color:var(--blue);font-size:11px;border:1px solid var(--blue);border-radius:20px;width:15px;height:15px;line-height:14px;text-align:center;flex:0 0 auto}
 .form{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:13px;margin-top:10px;font-size:12.5px;line-height:1.6}
-.ftag{font-size:10px;letter-spacing:.1em;font-weight:700;margin-bottom:3px}
 #rest{position:fixed;left:0;right:0;bottom:0;background:var(--blue);color:#FFFFFF;padding:13px 18px;padding-bottom:calc(13px + env(safe-area-inset-bottom));display:none;justify-content:space-between;align-items:center;z-index:50}
 .hdr{background:var(--card);border-bottom:1px solid var(--line);padding:16px 18px 12px;padding-top:calc(16px + env(safe-area-inset-top));position:sticky;top:0;z-index:40}
 .bar{height:3px;background:var(--line);border-radius:2px;margin-top:12px;overflow:hidden}
 .bar>div{height:100%;background:var(--goldfill);transition:width .25s}
 .dot{width:7px;height:7px;border-radius:7px;background:var(--green);display:inline-block}
-textarea{width:100%;min-height:340px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:14px;font-size:12.5px;font-family:ui-monospace,Menlo,monospace;line-height:1.6;resize:none}
+textarea{width:100%;min-height:300px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:14px;font-size:12.5px;font-family:ui-monospace,Menlo,monospace;line-height:1.6;resize:none}
 a{color:var(--blue)}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <div id="rest"><span style="font-size:13px;font-weight:650">Rest</span><span id="restT" style="font-size:24px;font-weight:750"></span><button onclick="skipRest()" style="background:rgba(255,255,255,.22);border:none;border-radius:8px;color:#FFFFFF;padding:7px 13px;font-weight:650;font-size:13px">Skip</button></div>
-
 <script>
-const PROGRAM = [{"id":"push","name":"Push","focus":"Chest · Delts · Triceps","warmup":"Foam roll + light DBs (5 min) → 2×15 band pull-aparts → 2–3 ramping sets on incline","exercises":[{"id":"p1","name":"Incline DB Press","sets":4,"reps":"6–8","target":"80 lb","rest":150,"note":"75×8 on all four sets with no drop-off — that means you had more. Last set should slow down.","seed":{"w":"70","r":"8"},"next":"Hit 8 on all sets at 80? Go 85 next. Otherwise stay and add a rep."},{"id":"p2","name":"Flat Barbell Bench Press","sets":3,"reps":"8–10","target":"145 lb","rest":120,"note":"Up from 135×10×3.","seed":{"w":"135","r":"8"},"next":"Get 10 on all sets at 145, then move to 155."},{"id":"p4","name":"Machine Shoulder Press","sets":4,"reps":"8–10","target":"55 lb","rest":90,"note":"50×8 on all four sets with no fatigue. Step up.","seed":{"w":"50","r":"10"},"next":"Machine press: reach 10 clean, then up one pin to 60."},{"id":"p3","name":"Cable Fly (low-to-high)","sets":3,"reps":"12–15","target":"20 lb","rest":75,"note":"Deep stretch at the bottom. Up from 20×15.","seed":{"w":"20","r":"12"},"next":"Cable fly at 20: build to 15 reps, then next pin (30)."},{"id":"p5","name":"Cable Lateral Raise","sets":3,"reps":"15–20","target":"10 lb · reps 15→20","rest":60,"note":"Strict. Stack moves in 10s — climb reps to 20 on all sets, then jump to 20 lb and rebuild from 15.","seed":{"w":"10","r":"15"},"next":"Lateral: climb to 20 reps at 10, then jump to 20 and restart at 15."},{"id":"p6","name":"Overhead Cable Triceps Ext","sets":3,"reps":"10–12","target":"90 lb · reps 10→12","rest":60,"note":"Reps to 12 on all sets before adding a pin.","seed":{"w":"90","r":"10"},"next":"Reach 12 on all sets at 90, then up one pin."},{"id":"p7","name":"Rope Pushdown","sets":2,"reps":"12–15","target":"100 lb · reps 12→15","rest":60,"seed":{"w":"100","r":"12"},"next":"Reach 15 at 100, then next pin."},{"id":"p8","name":"Hanging Leg Raise (straight)","sets":3,"reps":"10–15","target":"bodyweight · reps 10→15","rest":60,"mode":"bw","seed":{"w":"","r":"10"},"next":"Hit 15 straight-leg? Add an ankle weight next time."}]},{"id":"pull","name":"Pull","focus":"Back · Rear Delts · Biceps","warmup":"Foam roll + light DBs (5 min) → 2–3 ramping sets on pull-ups","exercises":[{"id":"l1","name":"Pull-Up","sets":4,"reps":"6–8","target":"Bodyweight · reps 6→8","rest":150,"note":"Strict, full hang to chin over bar. No added weight until these feel easy.","seed":{"w":"0","r":"6"},"next":"Bodyweight only for now. Build to 8 clean reps with 1–2 in reserve before adding any load."},{"id":"l2","name":"Chest-Supported Row / T-Bar","sets":4,"reps":"8–10","target":"50 lb · reps 8→10","rest":120,"note":"New angle. Upper-back thickness.","seed":{"w":"50","r":"8"},"next":"50x8 last time. Next: 9 at 50, then 10 at 50, then move to 60."},{"id":"l3","name":"Lat Pulldown (neutral grip)","sets":3,"reps":"10–12","target":"100 lb · reps 10→12","rest":90,"note":"You maxed at 100×10. Add reps before load.","seed":{"w":"100","r":"10"},"next":"100×10 last time, tapped out. Get 11 at 100, then 12, then try 110."},{"id":"l4","name":"Reverse Pec Deck","sets":4,"reps":"15–20","target":"60 lb · reps 15→20","rest":60,"note":"Rep ladder before the load jump — next pin is 30.","seed":{"w":"60","r":"20"},"next":"60×20 with 1 in reserve. Log that 21st rep next time, then move to the next pin."},{"id":"l5","name":"Incline DB Curl","sets":3,"reps":"8–10","target":"30 lb · reps 8→10","rest":60,"seed":{"w":"30","r":"10"},"next":"Incline curl 30: get 10 on all sets, then 35."},{"id":"l6","name":"Hammer Curl","sets":3,"reps":"10–12","target":"30 lb · reps 10→12","rest":60,"seed":{"w":"30","r":"10"},"next":"Hammer 30: reach 12, then 35."},{"id":"l7","name":"Cable Crunch","sets":3,"reps":"12–15","target":"120 lb · reps 12→15","rest":60,"seed":{"w":"120","r":"15"},"next":"Reach 15 at 120, then next pin."}]},{"id":"legs","name":"Legs","focus":"Quads · Hamstrings · Glutes","warmup":"Foam roll + light DBs (5 min) → 2 light sets leg extension or 20 bodyweight squats — get blood into the knee","exercises":[{"id":"g1","name":"Pendulum / Machine Squat","sets":4,"reps":"8–10","target":"45 lb · reps 8→10","rest":150,"note":"1–2 reps in reserve. Not 0 on every set.","seed":{"w":"45","r":"10"},"next":"Pendulum: reach 10 clean, then add a plate."},{"id":"g2","name":"Barbell RDL","sets":4,"reps":"8–10","target":"95 → 135 lb","rest":150,"note":"The key change. Hip hinge, soft knees, no forward travel.","seed":{"w":"95","r":"8"},"next":"RDL climbing 95→135. Add 10 when 10 reps feel controlled."},{"id":"g3","name":"Seated Leg Curl","sets":3,"reps":"12–15","target":"60 lb · reps 12→15","rest":75,"note":"Replaces lying curl — longer muscle length.","seed":{"w":"60","r":"12"},"next":"Seated curl: reach 15, then next pin."},{"id":"g4","name":"Leg Press","sets":3,"reps":"10–12","target":"230 lb+","rest":90,"seed":{"w":"230","r":"8"},"next":"Leg press: reach 12, then add a plate per side."},{"id":"g5","name":"Barbell Hip Thrust","sets":3,"reps":"8–10","target":"128 lb+","rest":90,"seed":{"w":"128","r":"8"},"next":"Hip thrust: reach 10 at 128, then 138."},{"id":"g6","name":"Standing Calf Raise","sets":4,"reps":"12–15","target":"240 lb","rest":60,"seed":{"w":"240","r":"15"},"next":"Calf: reach 15 with a pause, then next pin."}]},{"id":"delts","name":"Delts / Arms","focus":"Side Delts · Biceps · Triceps","warmup":"Foam roll + light DBs (5 min) → 2×15 band pull-aparts","exercises":[{"id":"d1","name":"Seated DB Lateral Raise","sets":4,"reps":"12–15","target":"30 lb","rest":60,"note":"Unchanged — 30×15 is already strong.","seed":{"w":"30","r":"15"},"next":"DB lateral 30: reach 15 strict, then 35s."},{"id":"d2","name":"Seated DB Shoulder Press","sets":4,"reps":"8–10","target":"40 lb · reps 8→10","rest":120,"note":"Dumbbells here — Push day covers the machine. Different stimulus.","seed":{"w":"40","r":"10"},"next":"DB press: reach 10 on all sets, then up 5."},{"id":"d3","name":"Cable Lateral (single arm)","sets":3,"reps":"20–25","target":"10 lb · reps 20→25","rest":45,"note":"If 25 gets easy and 20 lb is too big a step, slow the lowering to 3 seconds instead.","seed":{"w":"10","r":"20"},"next":"Cable lateral: climb to 25 reps at 10, then 20."},{"id":"d4","name":"Reverse Pec Deck","sets":3,"reps":"15–20","target":"60 lb · reps 15→20","rest":60,"seed":{"w":"60","r":"20"},"next":"60×20 with 1 in reserve. Convert it — aim for 21, then next pin."},{"id":"d5","name":"EZ Bar Curl","sets":3,"reps":"8–10","target":"35 lb · reps 8→10","rest":0,"ss":"A","ssRest":90,"seed":{"w":"35","r":"8"},"next":"EZ curl 35: reach 10, then 45."},{"id":"d6","name":"Close-Grip Bench","sets":3,"reps":"8–10","target":"95 lb · reps 8→10","rest":90,"ss":"A","seed":{"w":"95","r":"8"},"next":"Close-grip: reach 10 at 95, then 105."},{"id":"d7","name":"Cable Curl","sets":3,"reps":"12–15","target":"50 lb · reps 12→15","rest":0,"ss":"B","ssRest":75,"note":"Start at 50 and adjust — you were at 60×8 before.","seed":{"w":"50","r":"12"},"next":"Cable curl: reach 15 at 50, then next pin."},{"id":"d8","name":"Overhead Rope Extension","sets":3,"reps":"12–15","target":"80 lb · reps 12→15","rest":75,"ss":"B","note":"Lighter than the Push-day version — you are pre-fatigued here.","seed":{"w":"80","r":"12"},"next":"Rope ext: reach 15 at 80, then next pin."},{"id":"d9","name":"Pallof Press (per side)","sets":3,"reps":"12","target":"20 lb","rest":45,"note":"Anti-rotation. Obliques without the width — no heavy side bends.","seed":{"w":"20","r":"12"},"next":"Pallof: reach 12 controlled per side, then next pin."},{"id":"d10","name":"Cable Crunch","sets":2,"reps":"15","target":"120 lb","rest":60,"seed":{"w":"120","r":"15"},"next":"Reach 15 at 120, then next pin."}]},{"id":"chest","name":"Chest + Conditioning","focus":"Upper Chest · Zone 2 · Core","warmup":"Foam roll + light DBs (5 min) → 2×15 band pull-aparts","exercises":[{"id":"c1","name":"Zone 2 Cardio","sets":1,"reps":"30 min","target":"conversational","rest":0,"mode":"time","note":"Incline walk 12–15%, bike, or row.","seed":{"w":"","r":""}},{"id":"c2","name":"Incline DB Press","sets":3,"reps":"10–12","target":"50 lb · reps 10→12","rest":90,"note":"Always take the incline option — upper chest is the visual gap.","seed":{"w":"50","r":"10"},"next":"Incline (Fri): reach 12, then add 5."},{"id":"c3","name":"Cable Fly","sets":2,"reps":"15","target":"20 lb","rest":60,"seed":{"w":"20","r":"15"},"next":"Reach 15 at 20, then next pin."},{"id":"c4","name":"Straight-Arm Pulldown","sets":3,"reps":"12–15","target":"40 lb · reps 12→15","rest":60,"note":"Moved here so back gets trained twice a week.","seed":{"w":"40","r":"12"},"next":"Straight-arm: reach 15 at 40, then next pin."},{"id":"c5","name":"Back Extension","sets":3,"reps":"15","target":"add load · reps 15","rest":60,"seed":{"w":"","r":"15"},"next":"Back ext: reach 15 weighted, then add load."},{"id":"c6","name":"Hanging Leg Raise / Decline Sit-up","sets":3,"reps":"12–15","target":"weighted · reps 12→15","rest":60,"mode":"bw","seed":{"w":"","r":"12"},"next":"Reach 15 weighted, then add load."},{"id":"c7","name":"Serratus Punches","sets":2,"reps":"15","target":"light","rest":45,"note":"Optional. Pays off around 14%.","seed":{"w":"10","r":"15"},"next":"Serratus: reach 15 clean, then a touch more."},{"id":"c8","name":"Intervals — 20s on / 40s off","sets":8,"reps":"20s","target":"hard","rest":40,"mode":"time","note":"Once per week only. Skip on the other days.","seed":{"w":"","r":""}}]}];
-const FORM = {"p1":{"setup":"Bench at 30–45°. Dumbbells resting on your thighs, kick them up one at a time as you lie back.","execute":"Lower until your elbows are just below torso level and you feel the stretch across the upper chest. Press up and slightly inward. Elbows tucked ~45° from your body, not flared to 90°.","avoid":"Bouncing off the chest, or setting the bench so steep it becomes a shoulder press. 30° is plenty."},"p2":{"setup":"Eyes under the bar. Shoulder blades pinched back and down into the bench, small arch in the lower back, feet planted.","execute":"Lower to mid-chest with control, elbows ~45°. Drive through the floor as you press.","avoid":"Letting your shoulder blades unpinch at the top — that's where pec and shoulder strains come from."},"p3":{"setup":"Cables set at the LOWEST pin. Stand in the middle, one foot slightly forward, slight bend in the elbows that never changes.","execute":"Start with hands low and wide. Sweep up and together as if hugging a barrel, finishing at upper-chest height. Squeeze for a beat.","avoid":"Turning it into a press by bending the elbows. The elbow angle is locked the whole set — that's what keeps tension on the pec."},"p4":{"setup":"Adjust the seat so the handles sit level with your shoulders — too low and it becomes a chest press, too high and you lose range. Back flat against the pad.","execute":"Press to near lockout without slamming. Lower under control until your upper arms are level with your shoulders.","avoid":"Arching your lower back off the pad to grind out a rep, and cutting the bottom of the range short."},"p5":{"setup":"Cable at the lowest pin, handle in the hand furthest from the machine, cable crossing in front of your body.","execute":"Raise out to the side to shoulder height, leading with your elbow. Pause. Lower slowly — the negative is where most of the growth is.","avoid":"Swinging. If your torso rocks to get the weight up, drop to 10 lb."},"p6":{"setup":"Rope on a high pulley. Face away, staggered stance, hinge forward slightly. Rope behind your head, elbows pointing forward.","execute":"Extend at the elbow until your arms are straight, spreading the rope at the end. Let the weight pull your hands back behind your head for a full stretch.","avoid":"Letting your elbows drift outward or downward. They stay high and fixed."},"p7":{"setup":"Rope on a high pulley. Elbows pinned to your ribs, slight forward lean.","execute":"Push down and spread the rope apart at the bottom. Full lockout.","avoid":"Using your shoulders to push the weight down. Only the elbow joint moves."},"p8":{"setup":"Hang from a bar, shoulders active (not fully relaxed). Straight legs.","execute":"Curl your pelvis up toward your ribs and raise your legs — the pelvic tilt is the actual ab work, the leg raise is mostly hip flexor.","avoid":"Swinging. If you can't control it, do knee raises until you can, then progress."},"l1":{"setup":"Dumbbell held between your feet or a loaded backpack. Grip slightly wider than shoulders, palms forward.","execute":"Pull your elbows down and back, driving your chest toward the bar. Chin over the bar. Lower under control to a full hang.","avoid":"Half reps. A full stretch at the bottom is where lat width comes from."},"l2":{"setup":"Chest against the pad, feet planted. Set the pad so your arms can fully extend without your chest lifting off.","execute":"Pull the handles toward your lower ribs, driving your elbows back and squeezing your shoulder blades together. Pause at the contraction.","avoid":"Heaving your chest off the pad. If it lifts, the weight is too heavy — the pad is what makes this exercise honest."},"l3":{"setup":"Neutral (palms-facing) grip. Thighs locked under the pad, slight backward lean of about 15°.","execute":"Pull to your upper chest, elbows driving down toward your hips. Control the way up until your lats are fully stretched.","avoid":"Leaning back into a row. A little lean is fine, swinging is not."},"l4":{"setup":"Chest on the pad, arms extended forward at shoulder height, slight elbow bend.","execute":"Sweep your arms out and back in a wide arc, leading with your elbows. Squeeze the rear delts, then return slowly.","avoid":"Using your traps and biceps. Think of your hands as hooks — the elbows do the travelling."},"l5":{"setup":"Bench at 45–60°. Sit back fully so your arms hang BEHIND your torso. That hanging position is the whole point.","execute":"Curl up without letting your elbow drift forward. Lower all the way until your arm is straight and you feel the biceps stretch.","avoid":"Letting your shoulder roll forward at the bottom. Keep your chest up and shoulders back on the bench."},"l6":{"setup":"Neutral grip, palms facing each other, dumbbells at your sides.","execute":"Curl straight up keeping the palms facing in the whole way. Elbows stay pinned to your ribs.","avoid":"Rotating the wrist. Hammer grip throughout — that's what hits the brachialis and thickens the arm."},"l7":{"setup":"Kneel facing a high cable with a rope. Rope beside your head or at your temples. Hips stay fixed.","execute":"Crunch by rounding your spine and bringing your ribs toward your pelvis. Your elbows travel toward your thighs.","avoid":"Hinging at the hips instead of flexing your spine. If your back stays flat, you're doing a hip movement, not an ab one."},"g1":{"setup":"Feet on the platform shoulder-width, shoulders under the pads, back flat against the backrest.","execute":"Descend under control to at least parallel, keeping tension in the quads. Drive up through mid-foot.","avoid":"Going to true failure on every set. Stop at 1–2 reps in reserve — especially with your knee."},"g2":{"setup":"Barbell at hip height, feet hip-width, knees SOFT and fixed. Bar stays in contact with your legs the whole way.","execute":"Push your hips straight back, letting the bar slide down your thighs. Stop when your hamstrings are fully stretched — usually mid-shin. Drive your hips forward to stand.","avoid":"Bending the knees more as you descend (that turns it into a deadlift), or rounding the lower back. If your knees hurt on this, the setup is wrong — it should be almost entirely hips."},"g3":{"setup":"Back against the pad, thigh pad clamped down, knees aligned with the machine's pivot.","execute":"Curl your heels down and under, squeeze the hamstrings hard, return slowly.","avoid":"Letting your hips lift off the seat to gain leverage."},"g4":{"setup":"Feet shoulder-width, mid-platform. Back and hips flat against the seat.","execute":"Lower until your knees reach roughly 90°, then press through your heels without locking out hard at the top.","avoid":"Letting your lower back round off the pad at the bottom — that's the most common way people hurt themselves on this machine."},"g5":{"setup":"Upper back on a bench, bar across your hips with a pad. Feet flat, shins vertical at the top.","execute":"Drive through your heels until your torso is parallel to the floor. Squeeze the glutes hard at the top, ribs down.","avoid":"Hyperextending your lower back at the top. The movement ends when your hips are level, not higher."},"g6":{"setup":"Balls of your feet on the platform, heels hanging free.","execute":"Drop your heels for a full stretch, pause a beat at the bottom, then press all the way up onto your toes.","avoid":"Bouncing. Calves respond to the stretch and the pause, not to speed."},"d1":{"setup":"Seated, upright, dumbbells at your sides, tiny bend in the elbows.","execute":"Raise out to the side to shoulder height, pinkies very slightly higher than thumbs. Lower slowly.","avoid":"Going above shoulder height — past that the traps take over and the side delt stops working."},"d2":{"setup":"Upright bench, back supported. Dumbbells at shoulder height, palms forward, wrists stacked over elbows.","execute":"Press up until nearly locked without clanging the bells together. Lower until your upper arms reach shoulder level.","avoid":"Arching off the bench to grind a rep. Dumbbells demand more stability than the machine — expect to use less weight."},"d3":{"setup":"One arm at a time, cable at the lowest pin, standing side-on so the cable crosses your body.","execute":"Raise to shoulder height leading with the elbow. Cables keep tension at the bottom where dumbbells lose it — that's why both are in the program.","avoid":"Leaning away from the machine to cheat the weight up."},"d4":{"setup":"Chest on the pad, arms extended, slight elbow bend.","execute":"Sweep out and back in a wide arc, elbows leading, squeeze, return slowly.","avoid":"Shrugging your shoulders up toward your ears."},"d5":{"setup":"EZ bar, shoulder-width on the angled grips. Elbows pinned to your ribs. Set the bar down next to the bench before you start so you are not crossing the gym mid-round.","execute":"Curl up, squeeze, lower under full control. ","avoid":"Swinging your hips to start the rep."},"d6":{"setup":"Bench, hands about shoulder-width — NOT narrower, that just wrecks your wrists.","execute":"Lower to your lower chest with elbows tucked tight to your sides. Press up. ","avoid":"Flaring your elbows. Tucked elbows are what make it a triceps exercise."},"d7":{"setup":"Straight bar or rope on a low pulley.","execute":"Curl up with elbows fixed at your sides. Squeeze at the top. ","avoid":"Letting your elbows travel forward as you curl."},"d8":{"setup":"Rope on a high pulley, facing away, hinged slightly forward.","execute":"Extend fully, spreading the rope. Let your hands drop behind your head for the stretch. ","avoid":"Dropping the elbows. They stay high and pointed forward."},"d9":{"setup":"Cable at chest height. Stand SIDE-ON to the machine, feet shoulder-width, knees soft. Both hands on the handle at your sternum. Step away until there is real tension.","execute":"Press your hands straight out until your arms lock. The cable is now trying to rotate you toward the machine — resist it. Hold 2–3 seconds, return to your chest. All reps one side, then turn around.","avoid":"Any twist at all. If your torso rotates, it's too heavy. Brace your abs, squeeze your glutes, keep breathing. This is the one exercise where nothing should visibly move."},"d10":{"setup":"Kneel facing a high cable, rope at your temples, hips fixed.","execute":"Round your spine, bringing ribs toward pelvis.","avoid":"Hinging at the hips instead of flexing the spine."},"c1":{"setup":"Treadmill at 12–15% incline, or a bike or rower.","execute":"Conversational pace — you should be able to speak in full sentences but not comfortably sing. 30 minutes.","avoid":"Pushing the pace. Going harder here eats into recovery and defeats the purpose."},"c2":{"setup":"Bench at 30–45°. Take the incline option every time on this day.","execute":"Lower to a stretch, press up and slightly in. Higher reps than Monday — chase the pump here, not the load.","avoid":"Substituting a flat press. Upper chest is the visual gap; this session exists for it."},"c3":{"setup":"Cables low, slight fixed elbow bend.","execute":"Sweep up and together, squeeze, control the way back to a full stretch.","avoid":"Pressing instead of flying."},"c4":{"setup":"High cable, straight bar or rope. Stand back, hinge slightly forward, arms overhead and straight.","execute":"Keeping your arms straight, pull the bar down in an arc to your thighs using only your lats. Squeeze at the bottom.","avoid":"Bending the elbows — that turns it into a pushdown and the lats stop working."},"c5":{"setup":"Hips on the pad, feet secured, body straight.","execute":"Hinge down until you feel the hamstring stretch, then raise until your body is straight. Hold a plate to your chest to add load.","avoid":"Hyperextending past straight at the top."},"c6":{"setup":"Hang from a bar, or decline bench with a plate held at your chest.","execute":"Curl the pelvis toward the ribs. Add weight once 15 reps is comfortable.","avoid":"Swinging for momentum."},"c7":{"setup":"Light cable or band at chest height, standing facing away.","execute":"Punch straight forward, letting your shoulder blade slide FORWARD around your ribcage at the end. That protraction is the whole exercise.","avoid":"Treating it as a chest press. The range that matters is the last few inches."},"c8":{"setup":"Bike, rower, or treadmill. After your zone 2.","execute":"20 seconds hard, 40 seconds easy, eight rounds.","avoid":"Doing this more than once a week. It costs recovery you need for lifting."}};
-const TRIPS = [{"name":"Bahamas","icon":"<svg viewBox=\"0 0 24 24\" width=\"60%\" height=\"60%\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.6 14.6h16.8l-2 4a1.2 1.2 0 0 1-1.1.7H6.7a1.2 1.2 0 0 1-1.1-.7z\"/><path d=\"M6.4 14.6v-3.5h11.2v3.5\"/><path d=\"M9 11.1V8.2h6v2.9\"/><path d=\"M16.1 8.2V6.1h1.8v2.1\"/><circle cx=\"9.2\" cy=\"12.8\" r=\".55\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"12\" cy=\"12.8\" r=\".55\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"14.8\" cy=\"12.8\" r=\".55\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M2 21.4c1.2 0 1.2-.9 2.4-.9s1.2.9 2.4.9 1.2-.9 2.4-.9 1.2.9 2.4.9 1.2-.9 2.4-.9 1.2.9 2.4.9 1.2-.9 2.4-.9 1.2.9 2.4.9\" opacity=\".55\"/></svg>","tint":"#0E7490","date":"2026-10-08","bf":"~17%","line":"Four days on deck in a swimsuit. Every photo from this trip is permanent."},{"name":"Amsterdam","icon":"<svg viewBox=\"0 0 24 24\" width=\"60%\" height=\"60%\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 19.6c-2.6-3.6-2.6-8.2 0-11.9 2.6 3.7 2.6 8.3 0 11.9z\"/><path d=\"M12 19.6C7.6 18.2 5 14 5.4 9.6c4 1.4 6.3 5.5 6.6 10z\"/><path d=\"M12 19.6c4.4-1.4 7-5.6 6.6-10-4 1.4-6.3 5.5-6.6 10z\"/><path d=\"M12 19.6C7.4 19.4 3.4 16.8 2.2 12.8c4.2-.6 8.2 2.4 9.8 6.8z\"/><path d=\"M12 19.6c4.6-.2 8.6-2.8 9.8-6.8-4.2-.6-8.2 2.4-9.8 6.8z\"/><path d=\"M3.4 21.2h17.2\" opacity=\".5\"/></svg>","tint":"#7C5CBF","date":"2026-11-09","bf":"~15%","line":"A full week with nowhere to hide. This is the one you are really training for."},{"name":"Brazil","icon":"<svg viewBox=\"0 0 24 24\" width=\"60%\" height=\"60%\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"4.3\"/><path d=\"M12 2.4v2.6M12 19v2.6M21.6 12H19M5 12H2.4\"/><path d=\"M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9M18.8 18.8l-1.9-1.9M7.1 7.1L5.2 5.2\"/></svg>","tint":"#E8940C","date":"2026-12-02","bf":"~14%","line":"The leanest you have ever been, with seven days to enjoy it."}];
+const PROGRAM=[{"id":"push","name":"Push","focus":"Chest · Delts · Triceps","warmup":"Foam roll + light DBs (5 min) → 2×15 band pull-aparts → 2–3 ramping sets on incline","exercises":[{"id":"p1","name":"Incline DB Press","sets":4,"reps":"6–8","target":"70 lb · reps 8 (rebuild base)","rest":150,"note":"75×8 on all four sets with no drop-off — that means you had more. Last set should slow down.","seed":{"w":"70","r":"8"},"next":"Dropped from 75 — endurance was breaking down sets 3-4. Hit 4×8 clean at 70, then return to 75."},{"id":"p2","name":"Flat Barbell Bench Press","sets":3,"reps":"8–10","target":"135 lb · reps 8→10","rest":120,"note":"Up from 135×10×3.","seed":{"w":"135","r":"8"},"next":"135×10 on set 1, 8 on 2 and 3. Get 10 across all sets, then try 145."},{"id":"p4","name":"Machine Shoulder Press","sets":4,"reps":"8–10","target":"50 lb · reps 8→10","rest":90,"note":"50×8 on all four sets with no fatigue. Step up.","seed":{"w":"50","r":"8"},"next":"50×10 on early sets, 8 on later sets. Build to 10 across all four, then next pin."},{"id":"p3","name":"Cable Fly (low-to-high)","sets":3,"reps":"12–15","target":"20 lb","rest":75,"note":"Deep stretch at the bottom. Up from 20×15.","seed":{"w":"20","r":"15"},"next":"20×15 consistent across all sets. Move to 30, restart at 12."},{"id":"p5","name":"Cable Lateral Raise","sets":3,"reps":"15–20","target":"10 lb · reps 15→20","rest":60,"note":"Strict. Stack moves in 10s — climb reps to 20 on all sets, then jump to 20 lb and rebuild from 15.","seed":{"w":"10","r":"20"},"next":"Third set drops to 15. Stay at 10 until all sets hit 20, then 20 lb and restart at 12."},{"id":"p6","name":"Overhead Cable Triceps Ext","sets":3,"reps":"10–12","target":"80 lb · reps 10→12","rest":60,"note":"Reps to 12 on all sets before adding a pin.","seed":{"w":"80","r":"12"},"next":"80×12 across all sets, then back to 90."},{"id":"p7","name":"Rope Pushdown","sets":3,"reps":"12–15","target":"80 lb · reps 10→12","rest":60,"seed":{"w":"80","r":"10"},"next":"Finisher — triceps are pre-fatigued here. 80×10 is correct. When 3 sets of 12 feel manageable, move to 90."},{"id":"p8","name":"Hanging Leg Raise (straight)","sets":3,"reps":"10–15","target":"bodyweight · reps 10→15","rest":60,"mode":"bw","seed":{"w":"","r":"10"},"next":"10 reps every session. When these feel genuinely easy, add a small ankle weight."}]},{"id":"pull","name":"Pull","focus":"Back · Rear Delts · Biceps","warmup":"Foam roll + light DBs (5 min) → 2–3 ramping sets on pull-ups","exercises":[{"id":"l1","name":"Pull-Up","sets":4,"reps":"6–8","target":"Bodyweight · reps 6→8","rest":150,"note":"Strict, full hang to chin over bar. No added weight until these feel easy.","seed":{"w":"0","r":"8"},"next":"Bodyweight only for now. Build to 8 clean reps with 1–2 in reserve before adding any load."},{"id":"l2","name":"Chest-Supported Row / T-Bar","sets":4,"reps":"8–10","target":"50 lb · reps 8→10","rest":120,"note":"New angle. Upper-back thickness.","seed":{"w":"50","r":"10"},"next":"50x8 last time. Next: 9 at 50, then 10 at 50, then move to 60."},{"id":"l3","name":"Lat Pulldown (neutral grip)","sets":3,"reps":"10–12","target":"100 lb · reps 10→12","rest":90,"note":"You maxed at 100×10. Add reps before load.","seed":{"w":"100","r":"12"},"next":"100×10 last time, tapped out. Get 11 at 100, then 12, then try 110."},{"id":"l4","name":"Reverse Pec Deck","sets":4,"reps":"15–20","target":"60 lb · reps 15→20","rest":60,"note":"Rep ladder before the load jump — next pin is 30.","seed":{"w":"60","r":"20"},"next":"60×20 with 1 in reserve. Log that 21st rep next time, then move to the next pin."},{"id":"l5","name":"Incline DB Curl","sets":3,"reps":"8–10","target":"30 lb · reps 8→10","rest":60,"seed":{"w":"30","r":"10"},"next":"Incline curl 30: get 10 on all sets, then 35."},{"id":"l6","name":"Hammer Curl","sets":3,"reps":"10–12","target":"30 lb · reps 10→12","rest":60,"seed":{"w":"30","r":"12"},"next":"Hammer 30: reach 12, then 35."},{"id":"l7","name":"Cable Crunch","sets":3,"reps":"12–15","target":"120 lb · reps 12→15","rest":60,"seed":{"w":"120","r":"15"},"next":"Reach 15 at 120, then next pin."}]},{"id":"legs","name":"Legs","focus":"Quads · Hamstrings · Glutes","warmup":"Foam roll + light DBs (5 min) → 2 light sets leg extension or 20 bodyweight squats — get blood into the knee","exercises":[{"id":"g1","name":"Pendulum / Machine Squat","sets":4,"reps":"8–10","target":"45 lb · reps 8→10","rest":150,"note":"1–2 reps in reserve. Not 0 on every set.","seed":{"w":"45","r":"10"},"next":"10 on three of four sets. One more clean set of 10 across the board, then add a plate."},{"id":"g2","name":"Barbell RDL","sets":4,"reps":"8–10","target":"115 → 135 lb","rest":150,"note":"The key change. Hip hinge, soft knees, no forward travel.","seed":{"w":"115","r":"10"},"next":"Jumped to 115×10 mid-session, no problem. Try 125 next, still building to 135."},{"id":"g3","name":"Seated Leg Curl","sets":3,"reps":"12–15","target":"120 lb · reps 12→15","rest":75,"note":"Corrected — earlier 60 lb was a placeholder guess, not your real number.","seed":{"w":"120","r":"15"},"next":"120×15 twice already. Reach 15 on all three sets, then next pin (130)."},{"id":"g4","name":"Leg Press","sets":3,"reps":"10–12","target":"270 lb · reps 10→12","rest":90,"seed":{"w":"270","r":"12"},"next":"270×12 on set 2, 270×10 on set 3. Get 12 on all three, then add a plate per side."},{"id":"g5","name":"Barbell Hip Thrust","sets":3,"reps":"8–10","target":"120 lb · reps 8→10","rest":90,"seed":{"w":"120","r":"10"},"next":"120×8 twice. Add a rep next time, build to 10, then try 128."},{"id":"g6","name":"Standing Calf Raise","sets":4,"reps":"12–15","target":"240 lb · reps 15","rest":60,"seed":{"w":"240","r":"15"},"next":"Clean 15 across all four sets again. Next session, add a pin."}]},{"id":"delts","name":"Delts / Arms","focus":"Side Delts · Biceps · Triceps","warmup":"Foam roll + light DBs (5 min) → 2×15 band pull-aparts","exercises":[{"id":"d1","name":"Seated DB Lateral Raise","sets":4,"reps":"12–15","target":"20 lb · reps 12→15","rest":60,"note":"Seated version — no leg drive, no torso sway. Confirmed lighter-but-harder than the standing 30 lb you were using before.","seed":{"w":"20","r":"15"},"next":"20×15 seated across all four sets, no swing available to help you. Add a rep before adding load."},{"id":"d2","name":"Seated DB Shoulder Press","sets":4,"reps":"8–10","target":"45 lb · reps 8→10","rest":120,"note":"Dumbbells here — Push day covers the machine. Different stimulus.","seed":{"w":"45","r":"10"},"next":"Ramped to 45×8 as your top set. Reach 10 at 45, then try 50."},{"id":"d3","name":"Cable Lateral (single arm)","sets":3,"reps":"20–25","target":"10 lb · reps 20→25","rest":45,"note":"If 25 gets easy and 20 lb is too big a step, slow the lowering to 3 seconds instead.","seed":{"w":"10","r":"25"},"next":"20, 20, 15 — get 20 on all three sets, then push to 25."},{"id":"d4","name":"Reverse Pec Deck","sets":3,"reps":"15–20","target":"60 lb · reps 15→20","rest":60,"seed":{"w":"60","r":"20"},"next":"Clean 20 across all three sets again. Move to 70 next time, restart at 15."},{"id":"d5","name":"EZ Bar Curl","sets":3,"reps":"8–10","target":"40 lb · reps 8→10","rest":0,"ss":"A","ssRest":90,"seed":{"w":"40","r":"10"},"next":"Topped out at 40×10 — ahead of plan. Try 45 next."},{"id":"d6","name":"Close-Grip Bench","sets":3,"reps":"8–10","target":"95 lb · reps 8→10","rest":90,"ss":"A","seed":{"w":"95","r":"10"},"next":"10 reps on all three sets at 95. Add load — try 105."},{"id":"d7","name":"Cable Curl","sets":3,"reps":"12–15","target":"50 lb · reps 12→15","rest":0,"ss":"B","ssRest":75,"note":"Start at 50 and adjust — you were at 60×8 before.","seed":{"w":"50","r":"15"},"next":"Hit 15 at 50 on your last set. Get 15 across all three, then next pin (60)."},{"id":"d8","name":"Overhead Rope Extension","sets":3,"reps":"12–15","target":"80 lb · reps 12→15","rest":75,"ss":"B","note":"Lighter than the Push-day version — you are pre-fatigued here.","seed":{"w":"80","r":"15"},"next":"Consistent 12 across all three. Push to 15 next session, then next pin."},{"id":"d9","name":"Pallof Press (per side)","sets":3,"reps":"12","target":"40 lb","rest":45,"note":"Anti-rotation. Obliques without the width — no heavy side bends.","seed":{"w":"40","r":"12"},"next":"Doubled up to 40×12 for all three sets — real progress. Hold here or nudge to 45 if the torso stays still."},{"id":"d10","name":"Cable Crunch","sets":2,"reps":"15","target":"120 lb","rest":60,"seed":{"w":"130","r":"15"},"next":"120×20 then 130×15 — both strong. Get 15 at 130 on both sets, then 140."}]},{"id":"chest","name":"Chest + Conditioning","focus":"Upper Chest · Zone 2 · Core","warmup":"Foam roll + light DBs (5 min) → 2×15 band pull-aparts","exercises":[{"id":"c1","name":"Zone 2 Cardio","sets":1,"reps":"30 min","target":"30 min · zone 2","rest":0,"mode":"check","note":"Incline walk 12–15%, bike, or row.","seed":{"w":"","r":""},"next":"Hit zone 2 for the full 30 min. Use notes to log HR or distance."},{"id":"c2","name":"Incline DB Press","sets":3,"reps":"10–12","target":"50 lb · reps 12→15","rest":90,"note":"Always take the incline option — upper chest is the visual gap.","seed":{"w":"50","r":"12"},"next":"3×12 at 50 is solid on this second chest exposure. Reach 15 before moving to 55."},{"id":"c3","name":"Cable Fly","sets":2,"reps":"15","target":"20 lb","rest":60,"seed":{"w":"20","r":"15"},"next":"20×15 on both sets. Get a third set, then next pin."},{"id":"c4","name":"Straight-Arm Pulldown","sets":3,"reps":"12–15","target":"90 lb · reps 12→15","rest":60,"note":"Moved here so back gets trained twice a week.","seed":{"w":"90","r":"15"},"next":"Hit 90×15 on your top set — impressive ramp. Hold 90 and get 3 clean sets, then try 100."},{"id":"c5","name":"Back Extension","sets":3,"reps":"15","target":"Bodyweight · reps 12→15","rest":60,"seed":{"w":"","r":"12"},"next":"12s — energy was low. Get 15 clean reps when you're properly fuelled before adding load."},{"id":"c6","name":"Hanging Leg Raise / Decline Sit-up","sets":3,"reps":"12–15","target":"Bodyweight · reps 10→15","rest":60,"mode":"bw","seed":{"w":"","r":"10"},"next":"Build to 15 straight-leg, then add an ankle weight."},{"id":"c7","name":"Serratus Punches","sets":2,"reps":"15","target":"light","rest":45,"note":"Optional. Pays off around 14%.","seed":{"w":"20","r":"15"},"next":"20×15 on both sets. Get 3 sets, then try 25."},{"id":"c8","name":"Intervals (20s on / 40s off)","sets":8,"reps":"20s","target":"8 rounds","rest":40,"mode":"interval","note":"Once per week only. Skip on the other days.","seed":{"w":"20","r":""},"next":"8 rounds 20s on/40s off. Each set = 1 round. When 8 feels comfortable, add 2 rounds."}]}];
+const FORM={"p1":{"setup":"Bench at 30–45°. Dumbbells resting on your thighs, kick them up one at a time as you lie back.","execute":"Lower until your elbows are just below torso level and you feel the stretch across the upper chest. Press up and slightly inward. Elbows tucked ~45° from your body, not flared to 90°.","avoid":"Bouncing off the chest, or setting the bench so steep it becomes a shoulder press. 30° is plenty."},"p2":{"setup":"Eyes under the bar. Shoulder blades pinched back and down into the bench, small arch in the lower back, feet planted.","execute":"Lower to mid-chest with control, elbows ~45°. Drive through the floor as you press.","avoid":"Letting your shoulder blades unpinch at the top — that's where pec and shoulder strains come from."},"p3":{"setup":"Cables set at the LOWEST pin. Stand in the middle, one foot slightly forward, slight bend in the elbows that never changes.","execute":"Start with hands low and wide. Sweep up and together as if hugging a barrel, finishing at upper-chest height. Squeeze for a beat.","avoid":"Turning it into a press by bending the elbows. The elbow angle is locked the whole set — that's what keeps tension on the pec."},"p4":{"setup":"Adjust the seat so the handles sit level with your shoulders — too low and it becomes a chest press, too high and you lose range. Back flat against the pad.","execute":"Press to near lockout without slamming. Lower under control until your upper arms are level with your shoulders.","avoid":"Arching your lower back off the pad to grind out a rep, and cutting the bottom of the range short."},"p5":{"setup":"Cable at the lowest pin, handle in the hand furthest from the machine, cable crossing in front of your body.","execute":"Raise out to the side to shoulder height, leading with your elbow. Pause. Lower slowly — the negative is where most of the growth is.","avoid":"Swinging. If your torso rocks to get the weight up, drop to 10 lb."},"p6":{"setup":"Rope on a high pulley. Face away, staggered stance, hinge forward slightly. Rope behind your head, elbows pointing forward.","execute":"Extend at the elbow until your arms are straight, spreading the rope at the end. Let the weight pull your hands back behind your head for a full stretch.","avoid":"Letting your elbows drift outward or downward. They stay high and fixed."},"p7":{"setup":"Rope on a high pulley. Elbows pinned to your ribs, slight forward lean.","execute":"Push down and spread the rope apart at the bottom. Full lockout.","avoid":"Using your shoulders to push the weight down. Only the elbow joint moves."},"p8":{"setup":"Hang from a bar, shoulders active (not fully relaxed). Straight legs.","execute":"Curl your pelvis up toward your ribs and raise your legs — the pelvic tilt is the actual ab work, the leg raise is mostly hip flexor.","avoid":"Swinging. If you can't control it, do knee raises until you can, then progress."},"l1":{"setup":"Dumbbell held between your feet or a loaded backpack. Grip slightly wider than shoulders, palms forward.","execute":"Pull your elbows down and back, driving your chest toward the bar. Chin over the bar. Lower under control to a full hang.","avoid":"Half reps. A full stretch at the bottom is where lat width comes from."},"l2":{"setup":"Chest against the pad, feet planted. Set the pad so your arms can fully extend without your chest lifting off.","execute":"Pull the handles toward your lower ribs, driving your elbows back and squeezing your shoulder blades together. Pause at the contraction.","avoid":"Heaving your chest off the pad. If it lifts, the weight is too heavy — the pad is what makes this exercise honest."},"l3":{"setup":"Neutral (palms-facing) grip. Thighs locked under the pad, slight backward lean of about 15°.","execute":"Pull to your upper chest, elbows driving down toward your hips. Control the way up until your lats are fully stretched.","avoid":"Leaning back into a row. A little lean is fine, swinging is not."},"l4":{"setup":"Chest on the pad, arms extended forward at shoulder height, slight elbow bend.","execute":"Sweep your arms out and back in a wide arc, leading with your elbows. Squeeze the rear delts, then return slowly.","avoid":"Using your traps and biceps. Think of your hands as hooks — the elbows do the travelling."},"l5":{"setup":"Bench at 45–60°. Sit back fully so your arms hang BEHIND your torso. That hanging position is the whole point.","execute":"Curl up without letting your elbow drift forward. Lower all the way until your arm is straight and you feel the biceps stretch.","avoid":"Letting your shoulder roll forward at the bottom. Keep your chest up and shoulders back on the bench."},"l6":{"setup":"Neutral grip, palms facing each other, dumbbells at your sides.","execute":"Curl straight up keeping the palms facing in the whole way. Elbows stay pinned to your ribs.","avoid":"Rotating the wrist. Hammer grip throughout — that's what hits the brachialis and thickens the arm."},"l7":{"setup":"Kneel facing a high cable with a rope. Rope beside your head or at your temples. Hips stay fixed.","execute":"Crunch by rounding your spine and bringing your ribs toward your pelvis. Your elbows travel toward your thighs.","avoid":"Hinging at the hips instead of flexing your spine. If your back stays flat, you're doing a hip movement, not an ab one."},"g1":{"setup":"Feet on the platform shoulder-width, shoulders under the pads, back flat against the backrest.","execute":"Descend under control to at least parallel, keeping tension in the quads. Drive up through mid-foot.","avoid":"Going to true failure on every set. Stop at 1–2 reps in reserve — especially with your knee."},"g2":{"setup":"Barbell at hip height, feet hip-width, knees SOFT and fixed. Bar stays in contact with your legs the whole way.","execute":"Push your hips straight back, letting the bar slide down your thighs. Stop when your hamstrings are fully stretched — usually mid-shin. Drive your hips forward to stand.","avoid":"Bending the knees more as you descend (that turns it into a deadlift), or rounding the lower back. If your knees hurt on this, the setup is wrong — it should be almost entirely hips."},"g3":{"setup":"Back against the pad, thigh pad clamped down, knees aligned with the machine's pivot.","execute":"Curl your heels down and under, squeeze the hamstrings hard, return slowly.","avoid":"Letting your hips lift off the seat to gain leverage."},"g4":{"setup":"Feet shoulder-width, mid-platform. Back and hips flat against the seat.","execute":"Lower until your knees reach roughly 90°, then press through your heels without locking out hard at the top.","avoid":"Letting your lower back round off the pad at the bottom — that's the most common way people hurt themselves on this machine."},"g5":{"setup":"Upper back on a bench, bar across your hips with a pad. Feet flat, shins vertical at the top.","execute":"Drive through your heels until your torso is parallel to the floor. Squeeze the glutes hard at the top, ribs down.","avoid":"Hyperextending your lower back at the top. The movement ends when your hips are level, not higher."},"g6":{"setup":"Balls of your feet on the platform, heels hanging free.","execute":"Drop your heels for a full stretch, pause a beat at the bottom, then press all the way up onto your toes.","avoid":"Bouncing. Calves respond to the stretch and the pause, not to speed."},"d1":{"setup":"Seated, upright, dumbbells at your sides, tiny bend in the elbows.","execute":"Raise out to the side to shoulder height, pinkies very slightly higher than thumbs. Lower slowly.","avoid":"Going above shoulder height — past that the traps take over and the side delt stops working."},"d2":{"setup":"Upright bench, back supported. Dumbbells at shoulder height, palms forward, wrists stacked over elbows.","execute":"Press up until nearly locked without clanging the bells together. Lower until your upper arms reach shoulder level.","avoid":"Arching off the bench to grind a rep. Dumbbells demand more stability than the machine — expect to use less weight."},"d3":{"setup":"One arm at a time, cable at the lowest pin, standing side-on so the cable crosses your body.","execute":"Raise to shoulder height leading with the elbow. Cables keep tension at the bottom where dumbbells lose it — that's why both are in the program.","avoid":"Leaning away from the machine to cheat the weight up."},"d4":{"setup":"Chest on the pad, arms extended, slight elbow bend.","execute":"Sweep out and back in a wide arc, elbows leading, squeeze, return slowly.","avoid":"Shrugging your shoulders up toward your ears."},"d5":{"setup":"EZ bar, shoulder-width on the angled grips. Elbows pinned to your ribs. Set the bar down next to the bench before you start so you are not crossing the gym mid-round.","execute":"Curl up, squeeze, lower under full control. ","avoid":"Swinging your hips to start the rep."},"d6":{"setup":"Bench, hands about shoulder-width — NOT narrower, that just wrecks your wrists.","execute":"Lower to your lower chest with elbows tucked tight to your sides. Press up. ","avoid":"Flaring your elbows. Tucked elbows are what make it a triceps exercise."},"d7":{"setup":"Straight bar or rope on a low pulley.","execute":"Curl up with elbows fixed at your sides. Squeeze at the top. ","avoid":"Letting your elbows travel forward as you curl."},"d8":{"setup":"Rope on a high pulley, facing away, hinged slightly forward.","execute":"Extend fully, spreading the rope. Let your hands drop behind your head for the stretch. ","avoid":"Dropping the elbows. They stay high and pointed forward."},"d9":{"setup":"Cable at chest height. Stand SIDE-ON to the machine, feet shoulder-width, knees soft. Both hands on the handle at your sternum. Step away until there is real tension.","execute":"Press your hands straight out until your arms lock. The cable is now trying to rotate you toward the machine — resist it. Hold 2–3 seconds, return to your chest. All reps one side, then turn around.","avoid":"Any twist at all. If your torso rotates, it's too heavy. Brace your abs, squeeze your glutes, keep breathing. This is the one exercise where nothing should visibly move."},"d10":{"setup":"Kneel facing a high cable, rope at your temples, hips fixed.","execute":"Round your spine, bringing ribs toward pelvis.","avoid":"Hinging at the hips instead of flexing the spine."},"c1":{"setup":"Treadmill at 12–15% incline, or a bike or rower.","execute":"Conversational pace — you should be able to speak in full sentences but not comfortably sing. 30 minutes.","avoid":"Pushing the pace. Going harder here eats into recovery and defeats the purpose."},"c2":{"setup":"Bench at 30–45°. Take the incline option every time on this day.","execute":"Lower to a stretch, press up and slightly in. Higher reps than Monday — chase the pump here, not the load.","avoid":"Substituting a flat press. Upper chest is the visual gap; this session exists for it."},"c3":{"setup":"Cables low, slight fixed elbow bend.","execute":"Sweep up and together, squeeze, control the way back to a full stretch.","avoid":"Pressing instead of flying."},"c4":{"setup":"High cable, straight bar or rope. Stand back, hinge slightly forward, arms overhead and straight.","execute":"Keeping your arms straight, pull the bar down in an arc to your thighs using only your lats. Squeeze at the bottom.","avoid":"Bending the elbows — that turns it into a pushdown and the lats stop working."},"c5":{"setup":"Hips on the pad, feet secured, body straight.","execute":"Hinge down until you feel the hamstring stretch, then raise until your body is straight. Hold a plate to your chest to add load.","avoid":"Hyperextending past straight at the top."},"c6":{"setup":"Hang from a bar, or decline bench with a plate held at your chest.","execute":"Curl the pelvis toward the ribs. Add weight once 15 reps is comfortable.","avoid":"Swinging for momentum."},"c7":{"setup":"Light cable or band at chest height, standing facing away.","execute":"Punch straight forward, letting your shoulder blade slide FORWARD around your ribcage at the end. That protraction is the whole exercise.","avoid":"Treating it as a chest press. The range that matters is the last few inches."},"c8":{"setup":"Bike, rower, or treadmill. After your zone 2.","execute":"20 seconds hard, 40 seconds easy, eight rounds.","avoid":"Doing this more than once a week. It costs recovery you need for lifting."}};
+const TRIPS=[{"name":"Bahamas","icon":"<svg viewBox=\"0 0 24 24\" width=\"60%\" height=\"60%\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.6 14.6h16.8l-2 4a1.2 1.2 0 0 1-1.1.7H6.7a1.2 1.2 0 0 1-1.1-.7z\"/><path d=\"M6.4 14.6v-3.5h11.2v3.5\"/><path d=\"M9 11.1V8.2h6v2.9\"/><path d=\"M16.1 8.2V6.1h1.8v2.1\"/><circle cx=\"9.2\" cy=\"12.8\" r=\".55\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"12\" cy=\"12.8\" r=\".55\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"14.8\" cy=\"12.8\" r=\".55\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M2 21.4c1.2 0 1.2-.9 2.4-.9s1.2.9 2.4.9 1.2-.9 2.4-.9 1.2.9 2.4.9 1.2-.9 2.4-.9 1.2.9 2.4.9 1.2-.9 2.4-.9 1.2.9 2.4.9\" opacity=\".55\"/></svg>","tint":"#0E7490","date":"2026-10-08","bf":"~17%","line":"Four days on deck in a swimsuit. Every photo from this trip is permanent."},{"name":"Amsterdam","icon":"<svg viewBox=\"0 0 24 24\" width=\"60%\" height=\"60%\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 19.6c-2.6-3.6-2.6-8.2 0-11.9 2.6 3.7 2.6 8.3 0 11.9z\"/><path d=\"M12 19.6C7.6 18.2 5 14 5.4 9.6c4 1.4 6.3 5.5 6.6 10z\"/><path d=\"M12 19.6c4.4-1.4 7-5.6 6.6-10-4 1.4-6.3 5.5-6.6 10z\"/><path d=\"M12 19.6C7.4 19.4 3.4 16.8 2.2 12.8c4.2-.6 8.2 2.4 9.8 6.8z\"/><path d=\"M12 19.6c4.6-.2 8.6-2.8 9.8-6.8-4.2-.6-8.2 2.4-9.8 6.8z\"/><path d=\"M3.4 21.2h17.2\" opacity=\".5\"/></svg>","tint":"#7C5CBF","date":"2026-11-09","bf":"~15%","line":"A full week with nowhere to hide. This is the one you are really training for."},{"name":"Brazil","icon":"<svg viewBox=\"0 0 24 24\" width=\"60%\" height=\"60%\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"4.3\"/><path d=\"M12 2.4v2.6M12 19v2.6M21.6 12H19M5 12H2.4\"/><path d=\"M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9M18.8 18.8l-1.9-1.9M7.1 7.1L5.2 5.2\"/></svg>","tint":"#E8940C","date":"2026-12-02","bf":"~14%","line":"The leanest you have ever been, with seven days to enjoy it."}];
 const PLAN_START='2026-08-20';
-const APP_VERSION='1.1';
+const APP_VERSION='2.0';
+const STATS={weight:'168.4',bf:'20.5',lbm:'133.8',date:'2026-08-20'};
 
-/* ---------- storage: synchronous localStorage, cannot half-fail ---------- */
-const K_HIST='shredlog.history', K_ACT='shredlog.active', K_BAK='shredlog.backup';
+/* ── storage ── */
+const K_HIST='shredlog.history',K_ACT='shredlog.active',K_BAK='shredlog.active-backup';
 function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
 
 let history_=load(K_HIST,[]);
-const STATS={weight:'168.4',bf:'20.5',lbm:'133.8',date:'2026-08-20'};
 let active=load(K_ACT,null)||load(K_BAK,null);
 let view=active?'workout':'home';
-let openEx=null, restLeft=null, restTimer=null, wakeLock=null, restored=!!active;
+let openEx=null,restLeft=null,restTimer=null,wakeLock=null,restored=!!active;
+let confirmDiscard=false,saveFailed=false,confirmDel=null,wantWake=false,suppressWakeRender=false;
 
-function persist(){ if(active){save(K_ACT,active);save(K_BAK,active);} }
+function persist(){if(active){save(K_ACT,active);save(K_BAK,active);}}
 
-/* ---------- helpers ---------- */
+/* ── helpers ── */
 const pad=n=>String(n).padStart(2,'0');
 const clock=s=>Math.floor(s/60)+':'+pad(s%60);
 const today=()=>new Date().toISOString().slice(0,10);
 const daysTo=d=>Math.max(0,Math.round((new Date(d+'T00:00:00')-new Date(today()+'T00:00:00'))/864e5));
 const pretty=d=>new Date(d+'T00:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'});
+const prettyFull=d=>new Date(d+'T00:00:00').toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function groupEx(list){const out=[];list.forEach(ex=>{const p=out[out.length-1];if(ex.ss&&p&&p.ss===ex.ss)p.items.push(ex);else out.push({ss:ex.ss||null,items:[ex]})});return out}
 function best(rows){const d=(rows||[]).filter(r=>r.done&&r.reps);if(!d.length)return null;return d.reduce((a,b)=>(+(b.weight||0)>+(a.weight||0)?b:a));}
-function lastFor(day,ex){for(let i=history_.length-1;i>=0;i--){const s=history_[i];if(s.dayId===day&&s.entries[ex]){const b=best(s.entries[ex]);if(b)return b;}}return null;}
-function lastDone(day){for(let i=history_.length-1;i>=0;i--)if(history_[i].dayId===day)return history_[i].date;return null;}
+function lastFor(dayId,exId){for(let i=history_.length-1;i>=0;i--){const s=history_[i];if(s.dayId===dayId&&s.entries[exId]){const b=best(s.entries[exId]);if(b)return{...b,date:s.date};}}return null;}
+function lastDone(dayId){for(let i=history_.length-1;i>=0;i--)if(history_[i].dayId===dayId)return history_[i].date;return null;}
+function groupEx(list){const out=[];list.forEach(ex=>{const p=out[out.length-1];if(ex.ss&&p&&p.ss===ex.ss)p.items.push(ex);else out.push({ss:ex.ss||null,items:[ex]});});return out;}
+function seedRow(exId){const d=PROGRAM.find(x=>x.id===active.dayId);const e=d&&d.exercises.find(z=>z.id===exId);const sd=(e&&e.seed)||{};return{weight:sd.w!=null?String(sd.w):'',reps:sd.r!=null?String(sd.r):'',done:false,prefill:true};}
 
-/* ---------- keep screen awake ----------
-   Two strategies. Wake Lock API first (iOS 16.4+, HTTPS only, and DISABLED
-   entirely while Low Power Mode is on). If that fails for any reason we fall
-   back to looping a tiny silent video, which iOS treats as active playback and
-   will not sleep through. Status is surfaced in the UI so failures are visible
-   rather than silent. */
+/* ── wake lock ── */
 const NOSLEEP_WEBM='data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAHpEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHYTbuMU6uEElTDZ1OsggEeTbuMU6uEHFO7a1OsggHT7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsirXsYMPQkBNgI1MYXZmNjAuMTYuMTAwV0GNTGF2ZjYwLjE2LjEwMESJiECPQAAAAAAAFlSua8GuAQAAAAAAADjXgQFzxYgqw+KfZVULl5yBACK1nIN1bmSIgQCGhVZfVlA4g4EBI+ODhDuaygDgibCBQLqBQJqBAhJUw2f8c3OgY8CAZ8iaRaOHRU5DT0RFUkSHjUxhdmY2MC4xNi4xMDBzc9ZjwItjxYgqw+KfZVULl2fIoUWjh0VOQ09ERVJEh5RMYXZjNjAuMzEuMTAyIGxpYnZweGfIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDEuMDAwMDAwMDAwAB9DtnWv54EAo6qBAACA8AIAnQEqQABAAADHCIWFiJmEiASCAAZwPEJgCrIg9zAA/v7trgAcU7trkbuPs4EAt4r3gQHxggGf8IED';
 const NOSLEEP_MP4='data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAVxbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAA+gAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAjp0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAEAAAABAAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAPoAAAAAAABAAAAAAGybWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAABAAAAAQABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABXW1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAR1zdGJsAAAAuXN0c2QAAAAAAAAAAQAAAKlhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAEAAQABIAAAASAAAAAAAAAABFUxhdmM2MC4zMS4xMDIgbGlieDI2NAAAAAAAAAAAAAAAGP//AAAAL2F2Y0MBQsAe/+EAF2dCwB7ZBCbARAAAAwAEAAADAAg8WLkgAQAFaMuDyyAAAAAQcGFzcAAAAAEAAAABAAAAFGJ0cnQAAAAAAAAUkAAAFJAAAAAYc3R0cwAAAAAAAAABAAAAAQAAQAAAAAAcc3RzYwAAAAAAAAABAAAAAQAAAAEAAAABAAAAFHN0c3oAAAAAAAACkgAAAAEAAAAUc3RjbwAAAAAAAAABAAAFtgAAAmF0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAACAAAAAAAAA4AAAAAAAAAAAAAAAAEBAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAOAAAAEAAABAAAAAAHZbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAAAfQAAAIABVxAAAAAAALWhkbHIAAAAAAAAAAHNvdW4AAAAAAAAAAAAAAABTb3VuZEhhbmRsZXIAAAABhG1pbmYAAAAQc21oZAAAAAAAAAAAAAAAJGRpbmYAAAAcZHJlZgAAAAAAAAABAAAADHVybCAAAAABAAABSHN0YmwAAAB+c3RzZAAAAAAAAAABAAAAbm1wNGEAAAAAAAAAAQAAAAAAAAAAAAEAEAAAAAAfQAAAAAAANmVzZHMAAAAAA4CAgCUAAgAEgICAF0AVAAAAAAAfQAAAAX4FgICABRWIVuUABoCAgAECAAAAFGJ0cnQAAAAAAAAfQAAAAX4AAAAYc3R0cwAAAAAAAAABAAAACAAABAAAAAAoc3RzYwAAAAAAAAACAAAAAQAAAAEAAAABAAAAAgAAAAcAAAABAAAANHN0c3oAAAAAAAAAAAAAAAgAAAAVAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAABhzdGNvAAAAAAAAAAIAAAWhAAAISAAAABpzZ3BkAQAAAHJvbGwAAAACAAAAAf//AAAAHHNiZ3AAAAAAcm9sbAAAAAEAAAAIAAAAAQAAAGJ1ZHRhAAAAWm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNjAuMTYuMTAwAAAACGZyZWUAAALLbWRhdN4CAExhdmM2MC4zMS4xMDIAAjBADgAAAnAGBf//bNxF6b3m2Ui3lizYINkj7u94MjY0IC0gY29yZSAxNjQgcjMxMDggMzFlMTlmOSAtIEguMjY0L01QRUctNCBBVkMgY29kZWMgLSBDb3B5bGVmdCAyMDAzLTIwMjMgLSBodHRwOi8vd3d3LnZpZGVvbGFuLm9yZy94MjY0Lmh0bWwgLSBvcHRpb25zOiBjYWJhYz0wIHJlZj0zIGRlYmxvY2s9MTowOjAgYW5hbHlzZT0weDE6MHgxMTEgbWU9aGV4IHN1Ym1lPTcgcHN5PTEgcHN5X3JkPTEuMDA6MC4wMCBtaXhlZF9yZWY9MSBtZV9yYW5nZT0xNiBjaHJvbWFfbWU9MSB0cmVsbGlzPTEgOHg4ZGN0PTAgY3FtPTAgZGVhZHpvbmU9MjEsMTEgZmFzdF9wc2tpcD0xIGNocm9tYV9xcF9vZmZzZXQ9LTIgdGhyZWFkcz0xIGxvb2thaGVhZF90aHJlYWRzPTEgc2xpY2VkX3RocmVhZHM9MCBucj0wIGRlY2ltYXRlPTEgaW50ZXJsYWNlZD0wIGJsdXJheV9jb21wYXQ9MCBjb25zdHJhaW5lZF9pbnRyYT0wIGJmcmFtZXM9MCB3ZWlnaHRwPTAga2V5aW50PTI1MCBrZXlpbnRfbWluPTEgc2NlbmVjdXQ9NDAgaW50cmFfcmVmcmVzaD0wIHJjX2xvb2thaGVhZD00MCByYz1jcmYgbWJ0cmVlPTEgY3JmPTIzLjAgcWNvbXA9MC42MCBxcG1pbj0wIHFwbWF4PTY5IHFwc3RlcD00IGlwX3JhdGlvPTEuNDAgYXE9MToxLjAwAIAAAAAaZYiEBX///w9FAAFC3ycnJ1111111111114ABGCAHARggBwEYIAcBGCAHARggBwEYIAcBGCAH';
-let wakeMode='off', wakeErr='', noSleepVid=null, wantWake=false, suppressWakeRender=false;
-
-function setWakeMode(m,err){wakeMode=m;wakeErr=err||'';if(view==='workout'&&!suppressWakeRender)render()}
-
+let wakeMode='off',wakeErr='',noSleepVid=null;
+function setWakeMode(m,err){wakeMode=m;wakeErr=err||'';if(view==='workout'&&!suppressWakeRender)render();}
 async function getWake(){
   if(wakeMode!=='off'&&wakeMode!=='failed')return;
-  // strategy 1 — Wake Lock API
-  try{
-    if('wakeLock'in navigator){
-      wakeLock=await navigator.wakeLock.request('screen');
-      wakeLock.addEventListener('release',()=>{wakeLock=null;if(wantWake&&wakeMode==='lock'){wakeMode='off';playNoSleep()}});
-      setWakeMode('lock');
-      return;
-    }
-    wakeErr='Wake Lock not supported by this browser';
-  }catch(e){
-    wakeErr=(e&&e.name==='NotAllowedError')?'Blocked — Low Power Mode is the usual cause':(e&&e.message)||'Wake Lock refused';
-  }
+  try{if('wakeLock'in navigator){wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null;if(wantWake&&wakeMode==='lock'){wakeMode='off';playNoSleep();}});setWakeMode('lock');return;}wakeErr='Not supported';}
+  catch(e){wakeErr=(e&&e.name==='NotAllowedError')?'Blocked — check Low Power Mode':(e&&e.message)||'Refused';}
   await playNoSleep();
 }
-
 async function playNoSleep(){
-  try{
-    if(!noSleepVid){
-      noSleepVid=document.createElement('video');
-      noSleepVid.setAttribute('playsinline','');
-      noSleepVid.setAttribute('muted','');
-      noSleepVid.setAttribute('title','keep awake');
-      noSleepVid.muted=true;noSleepVid.loop=true;
-      const s1=document.createElement('source');s1.src=NOSLEEP_WEBM;s1.type='video/webm';
-      const s2=document.createElement('source');s2.src=NOSLEEP_MP4;s2.type='video/mp4';
-      noSleepVid.appendChild(s1);noSleepVid.appendChild(s2);
-      noSleepVid.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;bottom:0;left:0';
-      document.body.appendChild(noSleepVid);
-    }
-    await noSleepVid.play();
-    setWakeMode('video');
-  }catch(e2){
-    setWakeMode('failed',wakeErr||'Could not keep the screen on');
-  }
+  try{if(!noSleepVid){noSleepVid=document.createElement('video');noSleepVid.setAttribute('playsinline','');noSleepVid.setAttribute('muted','');noSleepVid.muted=true;noSleepVid.loop=true;const s1=document.createElement('source');s1.src=NOSLEEP_WEBM;s1.type='video/webm';const s2=document.createElement('source');s2.src=NOSLEEP_MP4;s2.type='video/mp4';noSleepVid.appendChild(s1);noSleepVid.appendChild(s2);noSleepVid.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;bottom:0;left:0';document.body.appendChild(noSleepVid);}
+  await noSleepVid.play();setWakeMode('video');}catch(e2){setWakeMode('failed',wakeErr||'Could not keep screen on');}
 }
-
-function dropWake(){
-  suppressWakeRender=true;
-  wantWake=false;
-  try{wakeLock&&wakeLock.release()}catch(e){}
-  wakeLock=null;
-  try{noSleepVid&&noSleepVid.pause()}catch(e){}
-  setWakeMode('off');
-  suppressWakeRender=false;
-}
-
-function toggleWake(){ if(wakeMode==='off'||wakeMode==='failed'){wantWake=true;getWake()} else {wantWake=false;dropWake()} }
-document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='hidden'){persist()}
-  else if(active&&wakeMode!=='off')getWake();
-});
+function dropWake(){suppressWakeRender=true;wantWake=false;try{wakeLock&&wakeLock.release()}catch(e){}wakeLock=null;try{noSleepVid&&noSleepVid.pause()}catch(e){}setWakeMode('off');suppressWakeRender=false;}
+function toggleWake(){if(wakeMode==='off'||wakeMode==='failed'){wantWake=true;getWake();}else{wantWake=false;dropWake();}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){persist();}else if(active&&wakeMode!=='off')getWake();});
 window.addEventListener('pagehide',persist);
 window.addEventListener('beforeunload',persist);
 
-/* ---------- actions ---------- */
+/* ── actions ── */
 function start(id){
   const day=PROGRAM.find(d=>d.id===id);
-  const entries={};
-  day.exercises.forEach(ex=>{const sd=ex.seed||{};entries[ex.id]=Array.from({length:ex.sets},()=>({weight:sd.w!=null?String(sd.w):'',reps:sd.r!=null?String(sd.r):'',done:false,prefill:true}))});
-  active={dayId:id,dayName:day.name,date:today(),startedAt:Date.now(),entries};
+  const entries={},exFeedback={};
+  day.exercises.forEach(ex=>{
+    const sd=ex.seed||{};
+    entries[ex.id]=Array.from({length:ex.sets},()=>({weight:sd.w!=null?String(sd.w):'',reps:sd.r!=null?String(sd.r):'',done:false,prefill:true}));
+    exFeedback[ex.id]={rpe:null,pain:0,tank:null,variant:'',note:''};
+  });
+  active={dayId:id,dayName:day.name,date:today(),startedAt:Date.now(),entries,exFeedback};
   restored=false;persist();wantWake=true;getWake();view='workout';render();
 }
-function resume(){view='workout';getWake();render()}
-function styleCell(el,prefill){if(!el)return;el.style.color=prefill?'#AEB6C2':'var(--text)';el.style.fontWeight=prefill?'400':'700';el.style.background=prefill?'var(--bg)':'#FFFFFF';}function seedRow(ex,i){var d=PROGRAM.find(function(x){return x.id===active.dayId;});var e=d&&d.exercises.find(function(z){return z.id===ex;});var sd=(e&&e.seed)||{};return {weight:sd.w!=null?String(sd.w):'',reps:sd.r!=null?String(sd.r):'',done:false,prefill:true};}function setField(ex,i,f,v,el){var row=active.entries[ex][i];row[f]=v;row['t_'+f]=true;var wReal=row.t_weight&&String(row.weight).trim()!=='';var rReal=row.t_reps&&String(row.reps).trim()!=='';if(!wReal&&!rReal&&!row.done){active.entries[ex][i]=seedRow(ex,i);persist();render();return;}row.prefill=false;if(el){var cell=el.parentNode;if(cell){var ins=cell.querySelectorAll('input.inp');for(var k=0;k<ins.length;k++)styleCell(ins[k],false);}}persist();}
+function resume(){view='workout';wantWake=true;getWake();render();}
+function setField(ex,i,f,v,el){
+  const row=active.entries[ex][i];row[f]=v;row['t_'+f]=true;
+  const wReal=row.t_weight&&String(row.weight).trim()!=='';
+  const rReal=row.t_reps&&String(row.reps).trim()!=='';
+  if(!wReal&&!rReal&&!row.done){active.entries[ex][i]=seedRow(ex);persist();render();return;}
+  row.prefill=false;
+  if(el){const cell=el.parentNode;if(cell){cell.querySelectorAll('input.inp').forEach(inp=>styleCell(inp,false));}}
+  persist();
+}
 function toggle(exId,i){
   const day=PROGRAM.find(d=>d.id===active.dayId);
-  const ex=day.exercises.find(e=>e.id===exId);
-  const r=active.entries[exId][i];
-  r.done=!r.done;r.prefill=false;persist();
-  if(r.done&&ex.rest>0)startRest(ex.rest);
+  const ex=day&&day.exercises.find(e=>e.id===exId);
+  const r=active.entries[exId][i];r.done=!r.done;r.prefill=false;persist();
+  if(r.done&&ex&&ex.rest>0)startRest(ex.rest);
   render();
 }
-function addSet(ex){active.entries[ex].push({weight:'',reps:'',done:false});persist();render()}
-function toggleForm(id){openEx=openEx===id?null:id;render()}
-function startRest(s){restLeft=s;clearInterval(restTimer);restTimer=setInterval(()=>{restLeft--;if(restLeft<=0){skipRest();return}paintRest()},1000);paintRest()}
-function skipRest(){clearInterval(restTimer);restLeft=null;document.getElementById('rest').style.display='none'}
-function paintRest(){const e=document.getElementById('rest');if(restLeft===null){e.style.display='none';return}e.style.display='flex';document.getElementById('restT').textContent=clock(restLeft)}
 function finish(){
   const dur=Math.floor((Date.now()-active.startedAt)/1000);
-  const cleaned={dayId:active.dayId,dayName:active.dayName,date:active.date,durationSec:dur,entries:{}};
-  Object.entries(active.entries).forEach(([k,rows])=>{const kept=rows.filter(r=>r.done||(!r.prefill&&(r.reps||r.weight)));if(kept.length)cleaned.entries[k]=kept});
+  const cleaned={dayId:active.dayId,dayName:active.dayName,date:active.date,durationSec:dur,entries:{},exFeedback:active.exFeedback||{}};
+  Object.entries(active.entries).forEach(([k,rows])=>{const kept=rows.filter(r=>r.done||(!r.prefill&&(r.reps||r.weight)));if(kept.length)cleaned.entries[k]=kept;});
   history_.push(cleaned);
-  if(!save(K_HIST,history_)){history_.pop();saveFailed=true;render();return}
-  view='home';del(K_ACT);del(K_BAK);active=null;skipRest();dropWake();render();
+  if(!save(K_HIST,history_)){history_.pop();saveFailed=true;render();return;}
+  saveFailed=false;view='home';del(K_ACT);del(K_BAK);active=null;skipRest();dropWake();render();
 }
-let confirmDiscard=false, saveFailed=false, confirmDel=null;
 function discardTap(){
-  if(!confirmDiscard){confirmDiscard=true;render();setTimeout(()=>{if(confirmDiscard){confirmDiscard=false;render()}},4000);return}
-  confirmDiscard=false;view='home';
-  del(K_ACT);del(K_BAK);active=null;skipRest();dropWake();render();
+  if(!confirmDiscard){confirmDiscard=true;render();setTimeout(()=>{if(confirmDiscard){confirmDiscard=false;render();}},4000);return;}
+  confirmDiscard=false;view='home';del(K_ACT);del(K_BAK);active=null;skipRest();dropWake();render();
 }
-function go(v){confirmDel=null;view=v;render()}
-function statsCard(){
-  const when=new Date(STATS.date+'T00:00:00').toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'});
-  const ICON={};
-  ICON['WEIGHT']='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="3"/><path d="M8.5 19.5v-2.4a3.5 3.5 0 0 1 7 0v2.4"/><path d="M12 8.2v2.4"/><circle cx="12" cy="8" r="1.1"/></svg>';
-  ICON['BODY FAT']='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4c3.2 3.4 5.4 6.3 5.4 9.3a5.4 5.4 0 0 1-10.8 0c0-3 2.2-5.9 5.4-9.3z"/><path d="M9.6 13.4a2.4 2.4 0 0 0 2.4 2.4" opacity=".55"/></svg>';
-  ICON['LEAN MASS']='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M20 9v6"/><path d="M6.5 7.4v9.2M17.5 7.4v9.2"/><path d="M6.5 12h11"/></svg>';
-  const TINT={'WEIGHT':'#2563EB','BODY FAT':'#E8940C','LEAN MASS':'#15803D'};
-  const col=(v,unit,label)=>'<div style="flex:1;text-align:center">'+
-    '<div style="color:'+TINT[label]+';display:flex;justify-content:center;margin-bottom:7px">'+ICON[label]+'</div>'+
-    '<div style="font-size:19px;font-weight:600;letter-spacing:-.02em;line-height:1.1">'+esc(v)+
-      '<span style="font-size:10.5px;font-weight:500;color:var(--dim);margin-left:1.5px">'+unit+'</span></div>'+
-    '<div style="font-size:9px;letter-spacing:.09em;color:var(--dim);margin-top:4px">'+label+'</div></div>';
-  return '<div style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 12px 12px;margin-bottom:10px">'+
-    '<div style="display:flex;align-items:flex-start">'+
-      col(STATS.weight,'lb','WEIGHT')+
-      '<div style="width:1px;background:var(--line)"></div>'+
-      col(STATS.bf,'%','BODY FAT')+
-      '<div style="width:1px;background:var(--line)"></div>'+
-      col(STATS.lbm,'lb','LEAN MASS')+
-    '</div>'+
-    '<div style="font-size:9.5px;color:var(--dim);text-align:center;margin-top:11px;padding-top:9px;border-top:1px solid var(--line)">'+when+'</div>'+
-    '</div>';
+function delTap(i){
+  if(confirmDel!==i){confirmDel=i;render();setTimeout(()=>{if(confirmDel===i){confirmDel=null;render();}},4000);return;}
+  confirmDel=null;history_.splice(i,1);save(K_HIST,history_);render();
+}
+function go(v){confirmDel=null;view=v;render();}
+
+/* ── feedback ── */
+function updateFb(ex,f,v){
+  if(!active.exFeedback)active.exFeedback={};
+  if(!active.exFeedback[ex])active.exFeedback[ex]={rpe:null,pain:0,tank:null,variant:'',note:''};
+  const fb=active.exFeedback[ex];
+  if(f==='pain')fb[f]=(fb[f]===+v)?0:+v;
+  else if(f==='rpe')fb[f]=(fb[f]===+v)?null:+v;
+  else if(f==='tank')fb[f]=(fb[f]===v)?null:v;
+  else fb[f]=v;
+  persist();
+  const wasOpen=document.getElementById('fbd-'+ex)&&document.getElementById('fbd-'+ex).style.display==='flex';
+  const wrapper=document.querySelector('.fb-toggle[data-ex="'+ex+'"]')?.parentElement;
+  if(wrapper){wrapper.innerHTML=buildFeedback(ex,fb);if(wasOpen)toggleFbDrawer(ex);}
+}
+function toggleFbDrawer(exId){
+  const d=document.getElementById('fbd-'+exId);if(!d)return;
+  const open=d.style.display==='flex';d.style.display=open?'none':'flex';
+  const btn=document.querySelector('.fb-toggle[data-ex="'+exId+'"]');
+  if(btn)btn.innerHTML=open?'&#xFF0B;&#8201; Add feedback':'&#9660;&#8201; Feedback';
+}
+document.addEventListener('click',function(e){
+  const btn=e.target.closest('.fb-btn');if(!btn||!active)return;
+  updateFb(btn.dataset.ex,btn.dataset.f,btn.dataset.v);
+});
+document.addEventListener('input',function(e){
+  if(!e.target.classList.contains('fb-note'))return;
+  const ex=e.target.dataset.ex;
+  if(!active||!ex)return;
+  if(!active.exFeedback)active.exFeedback={};
+  if(!active.exFeedback[ex])active.exFeedback[ex]={rpe:null,pain:0,tank:null,variant:'',note:''};
+  active.exFeedback[ex].note=e.target.value;persist();
+});
+
+/* ── rest timer ── */
+function startRest(s){restLeft=s;clearInterval(restTimer);restTimer=setInterval(()=>{restLeft--;if(restLeft<=0){skipRest();return;}paintRest();},1000);paintRest();}
+function skipRest(){clearInterval(restTimer);restLeft=null;document.getElementById('rest').style.display='none';}
+function paintRest(){const e=document.getElementById('rest');if(restLeft===null){e.style.display='none';return;}e.style.display='flex';document.getElementById('restT').textContent=clock(restLeft);}
+
+/* ── style helpers ── */
+function styleCell(el,prefill){if(!el)return;el.style.color=prefill?'#AEB6C2':'var(--text)';el.style.fontWeight=prefill?'400':'700';el.style.background=prefill?'var(--bg)':'#FFFFFF';}
+
+/* ── feedback builder ── */
+function buildFeedback(exId,fb){
+  fb=fb||{rpe:null,pain:0,tank:null,variant:'',note:''};
+  const pe=['','😊','😐','😬','🔴'],pt=['','None','Slight','Moderate','Stop'];
+  const hasData=fb.tank||fb.rpe||fb.pain>0||fb.variant||fb.note;
+  let h='<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">';
+  h+='<button class="fb-toggle" data-ex="'+esc(exId)+'" onclick="toggleFbDrawer(this.dataset.ex)"'
+   +' style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 0;border:none;border-radius:8px;background:'+(hasData?'color-mix(in srgb,var(--blue) 8%,transparent)':'var(--card2)')+';color:'+(hasData?'var(--blue)':'var(--dim)')+';font-size:12px;font-weight:600;cursor:pointer">'
+   +(hasData?'✏️&#8201; Feedback':'＋&#8201; Add feedback')+'</button>';
+  h+='<div class="fb-drawer" id="fbd-'+esc(exId)+'" style="display:none;flex-direction:column;gap:14px;margin-top:12px;padding:14px;background:var(--card2);border-radius:12px;border:1px solid var(--line)">';
+  // tank
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+  [['all-in','💪','All in'],['tank','🛢','Had more']].forEach(function(vl){
+    const v=vl[0],ico=vl[1],lbl=vl[2],on=fb.tank===v;
+    h+='<button class="fb-btn" data-ex="'+esc(exId)+'" data-f="tank" data-v="'+v+'" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 0;border:2px solid '+(on?'var(--blue)':'var(--line)')+';border-radius:10px;background:'+(on?'color-mix(in srgb,var(--blue) 10%,transparent)':'var(--card)')+';color:'+(on?'var(--blue)':'var(--dim)')+';font-size:13px;font-weight:'+(on?700:500)+';cursor:pointer"><span style="font-size:17px">'+ico+'</span><span>'+lbl+'</span></button>';
+  });
+  h+='</div>';
+  // effort
+  h+='<div><div style="font-size:9.5px;letter-spacing:.12em;color:var(--dim);margin-bottom:7px">EFFORT</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px">';
+  [[6,'Easy'],[7,'Mod.'],[8,'Hard'],[9,'V.Hard'],[10,'Max']].forEach(function(rl){
+    const r=rl[0],lbl=rl[1],on=fb.rpe===r;
+    h+='<button class="fb-btn" data-ex="'+esc(exId)+'" data-f="rpe" data-v="'+r+'" style="display:flex;flex-direction:column;align-items:center;padding:7px 2px;gap:1px;border:2px solid '+(on?'var(--goldfill)':'var(--line)')+';border-radius:9px;background:'+(on?'color-mix(in srgb,var(--goldfill) 12%,transparent)':'var(--card)')+';color:'+(on?'var(--gold)':'var(--dim)')+';cursor:pointer"><span style="font-size:15px;font-weight:700">'+r+'</span><span style="font-size:8.5px;text-align:center;line-height:1.2">'+lbl+'</span></button>';
+  });
+  h+='</div></div>';
+  // pain
+  h+='<div><div style="font-size:9.5px;letter-spacing:.12em;color:var(--dim);margin-bottom:7px">PAIN</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">';
+  [[1,'😊','None'],[2,'😐','Slight'],[3,'😬','Moderate'],[4,'🔴','Stop']].forEach(function(pl){
+    const p=pl[0],ico=pl[1],lbl=pl[2],on=fb.pain===p;
+    h+='<button class="fb-btn" data-ex="'+esc(exId)+'" data-f="pain" data-v="'+p+'" style="display:flex;flex-direction:column;align-items:center;padding:7px 4px;gap:1px;border:2px solid '+(on?'#DC2626':'var(--line)')+';border-radius:9px;background:'+(on?'#FEF2F2':'var(--card)')+';cursor:pointer"><span style="font-size:17px">'+ico+'</span><span style="font-size:8.5px;color:'+(on?'#DC2626':'var(--dim)')+'">'+lbl+'</span></button>';
+  });
+  h+='</div></div>';
+  // equipment — larger buttons
+  h+='<div><div style="font-size:9.5px;letter-spacing:.12em;color:var(--dim);margin-bottom:7px">EQUIPMENT</div><div style="display:flex;gap:7px;flex-wrap:wrap">';
+  [['Cable','⚡'],['Dumbbell','🏋'],['Barbell','🔩'],['Machine','⚙'],['Bodyweight','🤸']].forEach(function(cd){
+    const v=cd[0],ico=cd[1],on=fb.variant===v;
+    h+='<button class="fb-btn" data-ex="'+esc(exId)+'" data-f="variant" data-v="'+v+'" style="display:flex;align-items:center;gap:6px;padding:9px 16px;border:2px solid '+(on?'var(--green)':'var(--line)')+';border-radius:999px;background:'+(on?'color-mix(in srgb,var(--green) 10%,transparent)':'var(--card)')+';color:'+(on?'var(--green)':'var(--dim)')+';font-size:13px;font-weight:'+(on?650:400)+';cursor:pointer"><span style="font-size:14px">'+ico+'</span><span>'+v+'</span></button>';
+  });
+  h+='</div></div>';
+  // note — bigger input
+  h+='<input class="fb-note" data-ex="'+esc(exId)+'" type="text" value="'+esc(fb.note||'')+'" placeholder="Anything worth noting…" style="width:100%;background:var(--card);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:13px 14px;font-size:14px;outline:none;box-sizing:border-box">';
+  h+='</div></div>';
+  return h;
 }
 
-/* ---------- render ---------- */
+/* ── export ── */
+function exportText(){
+  if(!history_.length)return 'No sessions logged yet.';
+  const NL=String.fromCharCode(10);
+  const out=['SHREDLOG EXPORT — v'+APP_VERSION,''];
+  history_.forEach(function(s){
+    out.push('## '+s.dayName+' — '+s.date+(s.durationSec?'  ('+Math.round(s.durationSec/60)+' min)':''));
+    const day=PROGRAM.find(d=>d.id===s.dayId);
+    Object.entries(s.entries).forEach(function([id,rows]){
+      const ex=day&&day.exercises.find(e=>e.id===id);
+      const body=rows.map(r=>r.weight?(r.weight+'×'+(r.reps||'?')):(r.reps||'?')).join(', ');
+      out.push('- '+(ex?ex.name:id)+': '+body);
+      const fb=s.exFeedback&&s.exFeedback[id];
+      if(fb&&(fb.tank||fb.rpe||fb.pain>0||fb.variant||fb.note)){
+        const parts=[];
+        if(fb.tank)parts.push(fb.tank==='all-in'?'All in':'Had more');
+        if(fb.rpe)parts.push('RPE '+fb.rpe);
+        if(fb.pain>0)parts.push(['','None','Slight','Moderate','Stop'][fb.pain]+' pain');
+        if(fb.variant)parts.push(fb.variant);
+        if(fb.note)parts.push('"'+fb.note+'"');
+        out.push('  → '+parts.join(' · '));
+      }
+    });
+    out.push('');
+  });
+  return out.join(NL);
+}
+function copyExp(){
+  const t=document.getElementById('exp');const btn=document.getElementById('cpy');
+  const done=ok=>{if(!btn)return;btn.textContent=ok?'Copied':'Select all & copy manually';setTimeout(()=>{btn.textContent='Copy to clipboard';},2200);};
+  if(!t){done(false);return;}
+  t.focus();t.select();try{t.setSelectionRange(0,999999);}catch(e){}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t.value).then(()=>done(true)).catch(()=>{let ok=false;try{ok=document.execCommand('copy');}catch(e){}done(ok);});return;}
+  let ok=false;try{ok=document.execCommand('copy');}catch(e){}done(ok);
+}
+
+/* ── stats card ── */
+function statsCard(){
+  const when=prettyFull(STATS.date).toUpperCase();
+  const ICON_W='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="3"/><path d="M8.5 19.5v-2.4a3.5 3.5 0 0 1 7 0v2.4"/><path d="M12 8.2v2.4"/><circle cx="12" cy="8" r="1.1"/></svg>';
+  const ICON_B='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4c3.2 3.4 5.4 6.3 5.4 9.3a5.4 5.4 0 0 1-10.8 0c0-3 2.2-5.9 5.4-9.3z"/><path d="M9.6 13.4a2.4 2.4 0 0 0 2.4 2.4" opacity=".55"/></svg>';
+  const ICON_L='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M20 9v6"/><path d="M6.5 7.4v9.2M17.5 7.4v9.2"/><path d="M6.5 12h11"/></svg>';
+  const TINT={W:'#2563EB',B:'#E8940C',L:'#15803D'};
+  const col=(v,unit,label,ico,tint)=>'<div style="flex:1;text-align:center"><div style="color:'+tint+';display:flex;justify-content:center;margin-bottom:7px">'+ico+'</div><div style="font-size:19px;font-weight:600;letter-spacing:-.02em;line-height:1.1">'+v+'<span style="font-size:10.5px;font-weight:500;color:var(--dim);margin-left:1.5px">'+unit+'</span></div><div style="font-size:9px;letter-spacing:.08em;color:var(--dim);margin-top:4px">'+label+'</div></div>';
+  return '<div class="lbl" style="margin-bottom:10px">MEASUREMENTS</div>'
+    +'<div style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 10px 13px;margin-bottom:10px">'
+    +'<div style="display:flex;align-items:stretch">'
+    +col(STATS.weight,'lb','WEIGHT',ICON_W,TINT.W)
+    +'<div style="width:1px;background:var(--line);margin:2px 0"></div>'
+    +col(STATS.bf,'%','BODY FAT',ICON_B,TINT.B)
+    +'<div style="width:1px;background:var(--line);margin:2px 0"></div>'
+    +col(STATS.lbm,'lb','LEAN MASS',ICON_L,TINT.L)
+    +'</div>'
+    +'<div style="font-size:9.5px;color:var(--dim);text-align:center;margin-top:11px;padding-top:9px;border-top:1px solid var(--line)">'+when+'</div>'
+    +'</div>';
+}
+
+/* ── exercise card ── */
+function card(ex){
+  const day=PROGRAM.find(d=>d.id===active.dayId);
+  const rows=active.entries[ex.id]||[];
+  const prev=lastFor(day.id,ex.id);
+  const fb=(active.exFeedback&&active.exFeedback[ex.id])||{};
+  let h='<div class="card">';
+  h+='<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">';
+  h+='<button class="exname" data-exid="'+esc(ex.id)+'" onclick="toggleForm(this.dataset.exid)">'
+    +esc(ex.name)+'<span class="q">?</span></button>';
+  h+='<div class="gold" style="font-size:12.5px;font-weight:650;white-space:nowrap">'+ex.sets+' × '+esc(ex.reps)+'</div></div>';
+  h+='<div style="display:flex;gap:14px;margin-top:5px;font-size:12px;flex-wrap:wrap">';
+  h+='<span class="dim">Target <span style="color:var(--text)">'+esc(ex.target)+'</span></span>';
+  if(prev)h+='<span class="dim">Last <span class="blue">'+(prev.weight?prev.weight+'×'+prev.reps:prev.reps+' reps')+'</span></span>';
+  if(ex.rest>0)h+='<span class="dim">Rest '+clock(ex.rest)+'</span>';
+  h+='</div>';
+  if(ex.note)h+='<div class="dim" style="font-size:12px;margin-top:8px;line-height:1.5;font-style:italic">'+esc(ex.note)+'</div>';
+  if(openEx===ex.id&&FORM[ex.id]){
+    const f=FORM[ex.id];
+    h+='<div class="form">';
+    [['SET UP',f.setup,'var(--dim)'],['EXECUTE',f.execute,'var(--text)'],['AVOID',f.avoid,'var(--gold)']].forEach(x=>{
+      h+='<div style="margin-bottom:10px"><div style="font-size:10px;letter-spacing:.1em;color:'+x[2]+';font-weight:700;margin-bottom:3px">'+x[0]+'</div><div class="dim">'+esc(x[1])+'</div></div>';
+    });
+    h+='<a target="_blank" rel="noopener" style="font-size:12px;text-decoration:none;font-weight:600" href="https://www.youtube.com/results?search_query='+encodeURIComponent(ex.name+' proper form')+'">Watch a demo →</a></div>';
+  }
+  if(ex.next){
+    h+='<div style="display:flex;gap:7px;align-items:baseline;margin-top:8px;padding:7px 9px;background:#F0B4291F;border:1px solid #F0B42955;border-radius:8px">';
+    h+='<span style="color:var(--gold);font-size:9px;font-weight:750;letter-spacing:.1em;flex-shrink:0">NEXT</span>';
+    h+='<span style="color:var(--text);font-size:12px;line-height:1.45">'+esc(ex.next)+'</span></div>';
+  }
+  // set grid
+  if(ex.mode==='check'){
+    // single checkbox, no number inputs — e.g. Zone 2 cardio
+    const r=rows[0]||{done:false};
+    h+='<div style="margin-top:12px;display:flex;align-items:center;gap:14px">';
+    h+='<button class="chk'+(r.done?' on':'')+'" data-exid="'+esc(ex.id)+'" data-idx="0" onclick="toggle(this.dataset.exid,0)" style="width:54px;font-size:18px">'+(r.done?'✓':'—')+'</button>';
+    h+='<span style="color:'+(r.done?'var(--green)':'var(--dim)')+';font-size:13px;font-weight:650">'+(r.done?'Done — '+esc(ex.reps):esc(ex.reps)+' — tap when done')+'</span></div>';
+    h+='<input class="inp" type="text" placeholder="HR, distance, notes…" value="'+esc(r.reps&&!isNaN(r.reps)?'':r.reps||'')+'" data-exid="'+esc(ex.id)+'" data-idx="0" data-field="reps" oninput="setField(this.dataset.exid,0,this.dataset.field,this.value,this)" style="margin-top:9px;width:100%;text-align:left;font-size:13px;padding:9px 12px;color:var(--dim)">';
+  } else {
+    const col1=ex.mode==='interval'?'SEC':ex.mode==='time'?'MIN':ex.mode==='bw'?'':' LB';
+    const col2=ex.mode==='interval'?'DIST (m)':'REPS';
+    const showW=ex.mode!=='bw';
+    h+='<div style="margin-top:12px"><div class="row"><span class="lbl">SET</span>'+(showW?'<span class="lbl" style="text-align:center">'+col1+'</span>':'<span></span>')+'<span class="lbl" style="text-align:center">'+col2+'</span><span></span></div>';
+    rows.forEach((r,i)=>{
+      h+='<div class="row" style="opacity:'+(r.done?.55:1)+'">';
+      h+='<span class="dim" style="font-size:13px">'+(i+1)+'</span>';
+      if(showW){
+        h+='<input class="inp" type="number" inputmode="decimal" data-exid="'+esc(ex.id)+'" data-idx="'+i+'" data-field="weight" style="color:'+(r.prefill?'#AEB6C2':'var(--text)')+';font-weight:'+(r.prefill?'400':'700')+';background:'+(r.prefill?'var(--bg)':'#FFFFFF')+'" onfocus="if(this.dataset.prefill)this.select()" '+(r.prefill?'data-prefill="1"':'')+' value="'+esc(r.weight)+'" oninput="setField(this.dataset.exid,+this.dataset.idx,this.dataset.field,this.value,this)">';
+      } else {
+        h+='<span></span>';
+      }
+      h+='<input class="inp" type="number" inputmode="numeric" data-exid="'+esc(ex.id)+'" data-idx="'+i+'" data-field="reps" style="color:'+(r.prefill?'#AEB6C2':'var(--text)')+';font-weight:'+(r.prefill?'400':'700')+';background:'+(r.prefill?'var(--bg)':'#FFFFFF')+'" onfocus="if(this.dataset.prefill)this.select()" '+(r.prefill?'data-prefill="1"':'')+' value="'+esc(r.reps)+'" oninput="setField(this.dataset.exid,+this.dataset.idx,this.dataset.field,this.value,this)">';
+      h+='<button class="chk'+(r.done?' on':'')+'" data-exid="'+esc(ex.id)+'" data-idx="'+i+'" onclick="toggle(this.dataset.exid,+this.dataset.idx)">✓</button></div>';
+    });
+    h+='</div>';
+  }
+  h+=buildFeedback(ex.id,fb);
+  h+='</div>';
+  return h;
+}
+function toggleForm(id){openEx=openEx===id?null:id;render();}
+
+/* ── render ── */
 function render(){
   const a=document.getElementById('app');
   if(view==='workout'&&active)a.innerHTML=viewWorkout();
@@ -218,126 +361,116 @@ function render(){
   paintRest();
 }
 
+/* ── home ── */
 function viewHome(){
   const next=TRIPS.find(t=>daysTo(t.date)>0)||TRIPS[TRIPS.length-1];
-  return '<div class="wrap">'+
-  '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;gap:12px">'+
-  '<div><div style="font-size:26px;font-weight:750;letter-spacing:-.03em">ShredLog</div><div class="dim" style="font-size:12.5px;margin-top:3px">5-day split · v'+APP_VERSION+'</div></div>'+
-  '<div style="text-align:right;padding-top:3px"><div style="font-size:12.5px;font-weight:700">'+new Date().toLocaleDateString(undefined,{weekday:'long'})+'</div><div class="dim" style="font-size:12px;margin-top:2px">'+new Date().toLocaleDateString(undefined,{month:'long',day:'numeric'})+'</div></div>'+
-  '</div>'+
-  (function(){
-    const d=daysTo(next.date);
-    const total=Math.max(1,Math.round((new Date(next.date+'T00:00:00')-new Date(PLAN_START+'T00:00:00'))/864e5));
-    const gone=Math.min(total,total-d), pct=Math.round(gone/total*100);
-    const others=TRIPS.filter(t=>t.name!==next.name);
-    return '<div style="margin-bottom:20px">'+
-    '<div class="lbl" style="margin-bottom:8px">THIS IS WHY</div>'+
-    '<div style="background:'+next.tint+'14;border:1px solid '+next.tint+'4D;border-radius:14px;padding:16px 16px 14px">'+
-      '<div style="display:flex;align-items:center;gap:14px">'+
-        '<div style="width:56px;height:56px;border-radius:999px;background:'+next.tint+'16;border:1px solid '+next.tint+'33;color:'+next.tint+';display:flex;align-items:center;justify-content:center;flex:0 0 auto">'+next.icon+'</div>'+
-        '<div style="flex:1">'+
-          '<div style="display:flex;align-items:baseline;gap:7px"><span style="font-size:40px;font-weight:800;letter-spacing:-.045em;line-height:1">'+d+'</span><span style="font-size:12.5px;color:var(--dim);font-weight:600">days out</span></div>'+
-          '<div style="font-size:15.5px;font-weight:750;margin-top:3px;letter-spacing:-.01em">'+esc(next.name)+'</div>'+
-        '</div></div>'+
-      '<div style="font-size:13.5px;margin-top:13px;line-height:1.5;font-weight:600">'+esc(next.line)+'</div>'+
-      '<div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);margin-top:12px"><span>'+pretty(next.date)+'</span><span>Target <span style="color:'+next.tint+';font-weight:700">'+esc(next.bf)+'</span> body fat</span></div>'+
-      '<div style="height:5px;background:'+next.tint+'24;border-radius:3px;margin-top:9px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+next.tint+'"></div></div>'+
-      '<div style="font-size:10.5px;color:var(--dim);margin-top:5px">'+gone+' of '+total+' days done</div>'+
-    '</div>'+
-    '<div style="display:flex;gap:8px;margin-top:8px">'+others.map(t=>
-      '<div style="flex:1;background:'+t.tint+'18;border:1px solid '+t.tint+'55;border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:9px"><span style="width:30px;height:30px;border-radius:999px;background:'+t.tint+'16;color:'+t.tint+';display:flex;align-items:center;justify-content:center;flex:0 0 auto">'+t.icon+'</span><div><div style="font-size:15.5px;font-weight:750;line-height:1.15;color:'+t.tint+'">'+daysTo(t.date)+'</div><div style="font-size:9.5px;color:var(--dim);letter-spacing:.06em">'+t.name.toUpperCase()+'</div></div></div>'
-    ).join('')+'</div></div>';
-  })()+
-  '<div class="lbl" style="margin-bottom:10px">MEASUREMENTS</div>'+
-  statsCard()+
-  (active?'<button onclick="resume()" class="card" style="width:100%;text-align:left;border-color:var(--green);background:var(--card2);cursor:pointer;color:var(--text)"><div class="green" style="font-size:11px;letter-spacing:.08em;margin-bottom:4px">IN PROGRESS</div><div style="font-size:16.5px;font-weight:700">Resume '+esc(active.dayName)+'</div></button>':'')+
-  '<div class="lbl" style="margin-bottom:10px">START WORKOUT</div>'+
-  PROGRAM.map(d=>{
-    const l=lastDone(d.id),sets=d.exercises.reduce((a,e)=>a+e.sets,0);
-    return '<button onclick="start(\''+d.id+'\')" class="card" style="width:100%;text-align:left;cursor:pointer;color:var(--text);display:block">'+
-    '<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:16.5px;font-weight:700;letter-spacing:-.02em">'+esc(d.name)+'</span><span style="font-size:11.5px" class="'+(l?'dim':'gold')+'">'+(l?pretty(l):'Never')+'</span></div>'+
-    '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px">'+d.focus.split(' · ').map(p=>'<span style="background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:11px;font-weight:600;color:var(--dim)">'+esc(p)+'</span>').join('')+'</div>'+
-    '<div class="dim" style="font-size:11.5px;margin-top:9px">'+d.exercises.length+' exercises · '+sets+' sets</div></button>';
-  }).join('')+
-  '<div style="display:flex;gap:10px;margin-top:14px"><button class="btn bgrey" style="flex:1" onclick="go(\'history\')">History</button><button class="btn bgold" style="flex:1" onclick="go(\'export\')">Export</button></div>'+
-  '</div>';
+  const d=daysTo(next.date);
+  const total=Math.max(1,Math.round((new Date(next.date+'T00:00:00')-new Date(PLAN_START+'T00:00:00'))/864e5));
+  const gone=Math.min(total,total-d),pct=Math.round(gone/total*100);
+  const others=TRIPS.filter(t=>t.name!==next.name);
+  let h='<div class="wrap">';
+  // header
+  h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;gap:12px">';
+  h+='<div><div style="font-size:26px;font-weight:750;letter-spacing:-.03em">ShredLog</div>';
+  h+='<div class="dim" style="font-size:12.5px;margin-top:3px">5-day split · v'+APP_VERSION+'</div></div>';
+  h+='<div style="text-align:right;padding-top:3px"><div style="font-size:12.5px;font-weight:700">'+new Date().toLocaleDateString(undefined,{weekday:'long'})+'</div>';
+  h+='<div class="dim" style="font-size:12px;margin-top:2px">'+new Date().toLocaleDateString(undefined,{month:'long',day:'numeric'})+'</div></div></div>';
+  // this is why
+  h+='<div class="lbl" style="margin-bottom:8px">THIS IS WHY</div>';
+  h+='<div style="background:color-mix(in srgb,var(--card) 100%,transparent);border:1px solid '+next.tint+'4D;border-radius:14px;padding:16px 16px 14px;margin-bottom:8px">';
+  h+='<div style="display:flex;align-items:center;gap:14px">';
+  h+='<div style="width:56px;height:56px;border-radius:999px;background:'+next.tint+'16;border:1px solid '+next.tint+'33;color:'+next.tint+';display:flex;align-items:center;justify-content:center;flex-shrink:0">'+next.icon+'</div>';
+  h+='<div style="flex:1"><div style="display:flex;align-items:baseline;gap:7px"><span style="font-size:40px;font-weight:800;letter-spacing:-.045em;line-height:1">'+d+'</span><span class="dim" style="font-size:12.5px;font-weight:600">days out</span></div>';
+  h+='<div style="font-size:15.5px;font-weight:750;margin-top:3px;letter-spacing:-.01em">'+esc(next.name)+'</div></div></div>';
+  h+='<div style="font-size:13.5px;margin-top:13px;line-height:1.5;font-weight:600">'+esc(next.line)+'</div>';
+  h+='<div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);margin-top:12px">';
+  h+='<span>'+pretty(next.date)+'</span><span>Target <span style="color:'+next.tint+';font-weight:700">'+esc(next.bf)+'</span> body fat</span></div>';
+  h+='<div style="height:5px;background:'+next.tint+'24;border-radius:3px;margin-top:9px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+next.tint+';transition:width .3s"></div></div>';
+  h+='<div class="dim" style="font-size:10.5px;margin-top:5px">'+gone+' of '+total+' days done</div></div>';
+  // other trips
+  h+='<div style="display:flex;gap:8px;margin-bottom:10px">';
+  others.forEach(t=>{
+    h+='<div style="flex:1;background:'+t.tint+'18;border:1px solid '+t.tint+'55;border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:9px">';
+    h+='<span style="width:30px;height:30px;border-radius:999px;background:'+t.tint+'16;color:'+t.tint+';display:flex;align-items:center;justify-content:center;flex-shrink:0">'+t.icon+'</span>';
+    h+='<div><div style="font-size:15.5px;font-weight:750;line-height:1.15;color:'+t.tint+'">'+daysTo(t.date)+'</div><div style="font-size:9.5px;color:var(--dim);letter-spacing:.06em">'+t.name.toUpperCase()+'</div></div></div>';
+  });
+  h+='</div>';
+  // measurements
+  h+=statsCard();
+  // resume
+  if(active)h+='<button onclick="resume()" class="card" style="width:100%;text-align:left;border-color:var(--green);background:color-mix(in srgb,var(--green) 6%,transparent);cursor:pointer;color:var(--text)"><div style="color:var(--green);font-size:11px;letter-spacing:.08em;margin-bottom:4px">IN PROGRESS</div><div style="font-size:16.5px;font-weight:700">Resume '+esc(active.dayName)+'</div></button>';
+  // start workout
+  h+='<div class="lbl" style="margin-bottom:10px">START WORKOUT</div>';
+  PROGRAM.forEach(day=>{
+    const l=lastDone(day.id),sets=day.exercises.reduce((a,e)=>a+e.sets,0);
+    h+='<button data-dayid="'+day.id+'" onclick="start(this.dataset.dayid)" class="card" style="width:100%;text-align:left;cursor:pointer;color:var(--text);display:block">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:16.5px;font-weight:700;letter-spacing:-.02em">'+esc(day.name)+'</span><span style="font-size:11.5px" class="'+(l?'dim':'gold')+'">'+(l?pretty(l):'Never')+'</span></div>';
+    h+='<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px">'+day.focus.split(' · ').map(p=>'<span style="background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:11px;font-weight:600;color:var(--dim)">'+esc(p)+'</span>').join('')+'</div>';
+    h+='<div class="dim" style="font-size:11.5px;margin-top:9px">'+day.exercises.length+' exercises · '+sets+' sets</div></button>';
+  });
+  h+='<div style="display:flex;gap:10px;margin-top:14px"><button class="btn bgrey" style="flex:1" data-goto="history" onclick="go(this.dataset.goto)">History</button><button class="btn bgold" style="flex:1" data-goto="export" onclick="go(this.dataset.goto)">Export</button></div>';
+  h+='</div>';
+  return h;
 }
 
+/* ── workout ── */
 function viewWorkout(){
   const day=PROGRAM.find(d=>d.id===active.dayId);
-  const rowsAll=Object.values(active.entries);
-  const tot=rowsAll.reduce((a,r)=>a+r.length,0), done=rowsAll.reduce((a,r)=>a+r.filter(x=>x.done).length,0);
+  const rowsAll=Object.values(active.entries),tot=rowsAll.reduce((a,r)=>a+r.length,0),done=rowsAll.reduce((a,r)=>a+r.filter(x=>x.done).length,0);
   const el=Math.floor((Date.now()-active.startedAt)/1000);
-  let h='<div class="hdr"><div style="display:flex;justify-content:space-between;align-items:baseline">'+
-  '<div><div style="font-size:19px;font-weight:700;letter-spacing:-.02em">'+esc(day.name)+'</div><div class="dim" style="font-size:12px;margin-top:2px">'+esc(day.focus)+'</div></div>'+
-  '<div style="text-align:right"><div class="gold" style="font-size:22px;font-weight:700" id="elapsed">'+clock(el)+'</div><div style="margin-top:2px"><span class="dim" style="font-size:11px">'+done+'/'+tot+' sets</span> <span class="dot"></span></div><button onclick="toggleWake()" style="margin-top:6px;background:'+(wakeMode=='off'||wakeMode=='failed'?'transparent':'var(--green)')+';border:1px solid '+(wakeMode=='failed'?'var(--danger)':wakeMode=='off'?'var(--line)':'var(--green)')+';color:'+(wakeMode=='off'?'var(--dim)':wakeMode=='failed'?'var(--danger)':'#fff')+';border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:650;cursor:pointer">'+(wakeMode=='off'?'Keep screen on':wakeMode=='failed'?'Screen off':'Screen on')+'</button></div>'+
-  '</div><div class="bar"><div style="width:'+(tot?Math.round(done/tot*100):0)+'%"></div></div></div><div class="wrap" style="padding-bottom:110px">';
-
-  if(saveFailed)h+='<div class="card" style="border-color:var(--danger);background:var(--dangerbg);color:var(--dangertext);font-size:12.5px;line-height:1.5"><strong>Could not save.</strong> Write your numbers down before leaving this screen, then tap Finish again.</div>';
-  if(restored)h+='<div class="card" style="border-color:var(--green);background:var(--card2);color:var(--green);font-size:12.5px">Picked your session back up where you left it.</div>';
+  let h='<div class="hdr"><div style="display:flex;justify-content:space-between;align-items:baseline">';
+  h+='<div><div style="font-size:19px;font-weight:700;letter-spacing:-.02em">'+esc(day.name)+'</div><div class="dim" style="font-size:12px;margin-top:2px">'+esc(day.focus)+'</div></div>';
+  h+='<div style="text-align:right"><div class="gold" style="font-size:22px;font-weight:700" id="elapsed">'+clock(el)+'</div>';
+  h+='<div style="margin-top:2px"><span class="dim" style="font-size:11px">'+done+'/'+tot+' sets</span> <span class="dot"></span></div>';
+  h+='<button onclick="toggleWake()" style="margin-top:6px;background:'+(wakeMode==='off'||wakeMode==='failed'?'transparent':'var(--green)')+';border:1px solid '+(wakeMode==='failed'?'var(--danger)':wakeMode==='off'?'var(--line)':'var(--green)')+';color:'+(wakeMode==='off'?'var(--dim)':wakeMode==='failed'?'var(--danger)':'#fff')+';border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:650;cursor:pointer">'+(wakeMode==='off'?'Keep screen on':wakeMode==='failed'?'Screen off':'Screen on')+'</button>';
+  h+='</div></div><div class="bar"><div style="width:'+(tot?Math.round(done/tot*100):0)+'%"></div></div></div>';
+  h+='<div class="wrap" style="padding-bottom:110px">';
+  if(saveFailed)h+='<div class="card" style="border-color:var(--danger);background:var(--dangerbg);color:var(--dangertext);font-size:12.5px;line-height:1.5"><strong>Could not save.</strong> Write your numbers down before leaving.<button class="btn" style="background:var(--danger);color:#fff;padding:6px 12px;font-size:12px;margin-top:8px;display:block" onclick="finish()">Retry</button></div>';
+  if(restored)h+='<div class="card" style="border-color:var(--green);background:color-mix(in srgb,var(--green) 5%,transparent);color:var(--green);font-size:12.5px">Picked your session back up where you left it.</div>';
   h+='<div class="card" style="background:var(--card2);border-left:3px solid var(--blue);font-size:12.5px;line-height:1.55"><strong style="font-size:11.5px;letter-spacing:.06em">WARM-UP</strong><div class="dim" style="margin-top:4px">'+esc(day.warmup)+'</div></div>';
-  h+='<div class="card" style="background:var(--card2);border-left:3px solid var(--goldfill);font-size:12.5px;line-height:1.55"><strong style="font-size:11.5px;letter-spacing:.06em">HOW TO PROGRESS</strong><div class="dim" style="margin-top:4px">Reach the top of the rep range on every set first. Only then add load, and drop back to the bottom of the range.</div><div class="dim" style="margin-top:6px">Your cable stacks move in 10 lb steps, which is a big jump on light isolation work. The rep ladder is how you bridge it. Stuck between pins? Slow the lowering to 3 seconds, pause a beat at the top, or step further from the machine.</div></div>';
-
-  const card=(ex)=>{
-    let h='';
-    const rows=active.entries[ex.id]||[], prev=lastFor(day.id,ex.id), f=FORM[ex.id];
-    h+='<div class="card" style="margin-bottom:'+(ex.ss?7:12)+'px">'+
-    '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">'+
-    '<button class="exname" onclick="toggleForm(\''+ex.id+'\')">'+esc(ex.name)+'<span class="q">?</span></button>'+
-    '<div class="gold" style="font-size:12.5px;font-weight:650;white-space:nowrap">'+ex.sets+' × '+esc(ex.reps)+'</div></div>'+
-    '<div style="display:flex;gap:14px;margin-top:5px;font-size:12px;flex-wrap:wrap">'+
-    '<span class="dim">Target <span style="color:var(--text)">'+esc(ex.target)+'</span></span>'+
-    (prev?'<span class="dim">Last <span class="blue">'+(prev.weight?prev.weight+'×'+prev.reps:prev.reps+' reps')+'</span></span>':'')+
-    (ex.rest>0?'<span class="dim">Rest '+clock(ex.rest)+'</span>':'')+'</div>'+
-    (ex.note?'<div class="dim" style="font-size:12px;margin-top:8px;line-height:1.5;font-style:italic">'+esc(ex.note)+'</div>':'')+
-    (ex.next?'<div style="display:flex;gap:7px;align-items:baseline;margin-top:8px;padding:7px 9px;background:#F0B4291F;border:1px solid #F0B42955;border-radius:8px"><span style="color:var(--gold);font-size:9px;font-weight:750;letter-spacing:.1em;flex:0 0 auto">NEXT</span><span style="color:var(--text);font-size:12px;line-height:1.45">'+esc(ex.next)+'</span></div>':'');
-
-    if(openEx===ex.id&&f){
-      h+='<div class="form">'+
-      [['SET UP',f.setup,'var(--dim)'],['EXECUTE',f.execute,'var(--text)'],['AVOID',f.avoid,'var(--gold)']].map(x=>
-        '<div style="margin-bottom:10px"><div class="ftag" style="color:'+x[2]+'">'+x[0]+'</div><div class="dim">'+esc(x[1])+'</div></div>').join('')+
-      '<a target="_blank" rel="noopener" style="font-size:12px;text-decoration:none;font-weight:600" href="https://www.youtube.com/results?search_query='+encodeURIComponent(ex.name+' proper form')+'">Watch a demo →</a></div>';
-    }
-
-    h+='<div style="margin-top:12px"><div class="row"><span class="lbl">SET</span><span class="lbl" style="text-align:center">'+(ex.mode==='time'?'MIN':'LB')+'</span><span class="lbl" style="text-align:center">REPS</span><span></span></div>';
-    rows.forEach((r,i)=>{
-      h+='<div class="row" style="opacity:'+(r.done?.55:1)+'"><span class="dim" style="font-size:13px">'+(i+1)+'</span>'+
-      '<input class="inp" type="number" inputmode="decimal" style="color:'+(r.prefill?'#AEB6C2':'var(--text)')+';font-weight:'+(r.prefill?'400':'700')+';background:'+(r.prefill?'var(--bg)':'#FFFFFF')+'" onfocus="if('+(r.prefill?1:0)+')this.select()" value="'+esc(r.weight)+'" oninput="setField(\''+ex.id+'\','+i+',\'weight\',this.value,this)">'+
-      '<input class="inp" type="number" inputmode="numeric" style="color:'+(r.prefill?'#AEB6C2':'var(--text)')+';font-weight:'+(r.prefill?'400':'700')+';background:'+(r.prefill?'var(--bg)':'#FFFFFF')+'" onfocus="if('+(r.prefill?1:0)+')this.select()" value="'+esc(r.reps)+'" oninput="setField(\''+ex.id+'\','+i+',\'reps\',this.value,this)">'+
-      '<button class="chk'+(r.done?' on':'')+'" onclick="toggle(\''+ex.id+'\','+i+')">✓</button></div>';
-    });
-    h+='<button onclick="addSet(\''+ex.id+'\')" style="background:none;border:1px dashed var(--line);border-radius:8px;color:var(--dim);padding:7px 0;width:100%;font-size:12.5px;cursor:pointer;margin-top:2px">+ Add set</button></div></div>';
-    return h;
-  };
-
-  groupEx(day.exercises).forEach((grp,gi)=>{
-    if(!grp.ss){h+=card(grp.items[0]);return}
+  h+='<div class="card" style="background:var(--card2);border-left:3px solid var(--goldfill);font-size:12.5px;line-height:1.55"><strong style="font-size:11.5px;letter-spacing:.06em">HOW TO PROGRESS</strong><div class="dim" style="margin-top:4px">Reach the top of the rep range on every set first. Only then add load, and drop back to the bottom.</div><div class="dim" style="margin-top:6px">Cable stacks move in 10 lb steps — climb reps first. Stuck between pins? Slow the lowering to 3 seconds.</div></div>';
+  groupEx(day.exercises).forEach(grp=>{
+    if(!grp.ss){h+=card(grp.items[0]);return;}
     const lead=grp.items[0];
-    h+='<div style="border:1px solid color-mix(in srgb,var(--blue) 28%,transparent);border-left:4px solid var(--blue);border-radius:14px;background:color-mix(in srgb,var(--blue) 5%,transparent);padding:12px 11px 11px;margin-bottom:12px">'+
-      '<div style="display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 9px">'+
-      '<span style="color:var(--blue);font-size:10.5px;font-weight:750;letter-spacing:.11em">SUPERSET '+grp.ss+'</span>'+
-      '<span style="color:var(--blue);font-size:11px;font-weight:600">'+lead.sets+' rounds · no rest between</span></div>';
+    h+='<div style="border:1px solid color-mix(in srgb,var(--blue) 28%,transparent);border-left:4px solid var(--blue);border-radius:14px;background:color-mix(in srgb,var(--blue) 5%,transparent);padding:12px 11px 11px;margin-bottom:12px">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 9px"><span style="color:var(--blue);font-size:10.5px;font-weight:750;letter-spacing:.11em">SUPERSET '+grp.ss+'</span><span style="color:var(--blue);font-size:11px;font-weight:600">'+lead.sets+' rounds · no rest between</span></div>';
     grp.items.forEach((ex,ei)=>{
       if(ei>0)h+='<div style="display:flex;align-items:center;gap:8px;padding:1px 4px 7px"><span style="color:var(--blue);font-size:13px;font-weight:700">↓</span><span style="color:var(--blue);font-size:11px;font-weight:600">straight into</span><div style="flex:1;height:1px;background:color-mix(in srgb,var(--blue) 22%,transparent)"></div></div>';
       h+=card(ex);
     });
     h+='<div class="dim" style="font-size:11.5px;padding:2px 4px 0;line-height:1.5">Rest '+clock(lead.ssRest||90)+' after the pair, then start the next round.</div></div>';
   });
-
-  h+='<div style="display:flex;gap:10px;margin-top:6px"><button class="btn bgold" style="flex:2" onclick="finish()">Finish workout</button><button class="btn" style="flex:1;background:'+(confirmDiscard?'var(--danger)':'var(--card2)')+';color:'+(confirmDiscard?'#FFFFFF':'var(--dim)')+';font-size:'+(confirmDiscard?13:15)+'px" onclick="discardTap()">'+(confirmDiscard?'Tap to confirm':'Discard')+'</button></div></div>';
+  h+='<div style="display:flex;gap:10px;margin-top:6px">';
+  h+='<button class="btn bgold" style="flex:2" onclick="finish()">Finish workout</button>';
+  h+='<button class="btn" style="flex:1;background:'+(confirmDiscard?'var(--danger)':'var(--card2)')+';color:'+(confirmDiscard?'#fff':'var(--dim)')+';font-size:'+(confirmDiscard?13:15)+'px" onclick="discardTap()">'+(confirmDiscard?'Tap again to discard':'Discard')+'</button>';
+  h+='</div></div>';
   return h;
 }
 
+/* ── history ── */
 function viewHistory(){
-  let h='<div class="wrap"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="btn bgrey" style="padding:7px 12px" onclick="go(\'home\')">←</button><span style="font-size:19px;font-weight:700">History</span></div>';
+  let h='<div class="wrap"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="btn bgrey" style="padding:7px 12px" data-goto="home" onclick="go(this.dataset.goto)">←</button><span style="font-size:19px;font-weight:700">History</span></div>';
   if(!history_.length)h+='<div class="dim" style="font-size:14px;padding:28px 0">Nothing logged yet.</div>';
-  history_.slice().reverse().forEach((s,i)=>{
+  history_.slice().reverse().forEach(function(s,i){
     const orig=history_.length-1-i;
     const day=PROGRAM.find(d=>d.id===s.dayId);
     h+='<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><strong style="font-size:15px">'+esc(s.dayName)+'</strong><span class="dim" style="font-size:13px">'+pretty(s.date)+(s.durationSec?' · '+Math.round(s.durationSec/60)+'m':'')+'</span></div>';
-    Object.entries(s.entries).forEach(([id,rows])=>{
-      const ex=day&&day.exercises.find(e=>e.id===id), b=best(rows);
-      h+='<div class="dim" style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>'+esc(ex?ex.name:id)+'</span><span style="color:var(--text)">'+(b?(b.weight?b.weight+' × '+b.reps:b.reps+' reps'):'—')+'</span></div>';
+    Object.entries(s.entries).forEach(function([id,rows]){
+      const ex=day&&day.exercises.find(e=>e.id===id);
+      const fb=(s.exFeedback&&s.exFeedback[id])||{};
+      const setStr=rows.map(r=>r.weight?r.weight+'×'+r.reps:r.reps).join(' · ');
+      h+='<div style="padding:6px 0;border-bottom:1px solid var(--line)">';
+      h+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px"><span style="font-size:13px;font-weight:650">'+esc(ex?ex.name:id)+'</span>'+(fb.variant?'<span style="font-size:10.5px;color:var(--green);font-weight:600">'+esc(fb.variant)+'</span>':'')+'</div>';
+      h+='<div style="font-size:12px;color:var(--dim)">'+esc(setStr)+'</div>';
+      if(fb.rpe||fb.pain>0||fb.tank||fb.note){
+        h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:5px">';
+        if(fb.tank)h+='<span style="font-size:10.5px;padding:2px 7px;border:1px solid var(--blue)44;border-radius:999px;color:var(--blue)">'+(fb.tank==='all-in'?'💪 All in':'🛢 Had more')+'</span>';
+        if(fb.rpe)h+='<span style="font-size:10.5px;padding:2px 7px;border:1px solid var(--goldfill)55;border-radius:999px;color:var(--gold)">RPE '+fb.rpe+'</span>';
+        if(fb.pain>0)h+='<span style="font-size:10.5px;padding:2px 7px;border:1px solid #DC262633;border-radius:999px;color:#DC2626">'+['','😊','😐','😬','🔴'][fb.pain]+' '+['','None','Slight','Moderate','Stop'][fb.pain]+'</span>';
+        if(fb.note)h+='<span style="font-size:10.5px;color:var(--dim);font-style:italic">'+esc(fb.note)+'</span>';
+        h+='</div>';
+      }
+      h+='</div>';
     });
     h+='<div style="display:flex;justify-content:flex-end;margin-top:10px"><button onclick="delTap('+orig+')" style="background:'+(confirmDel===orig?'var(--danger)':'transparent')+';border:1px solid '+(confirmDel===orig?'var(--danger)':'var(--line)')+';border-radius:8px;color:'+(confirmDel===orig?'#FFFFFF':'var(--dim)')+';padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer">'+(confirmDel===orig?'Tap again to delete':'Delete')+'</button></div>';
     h+='</div>';
@@ -345,58 +478,18 @@ function viewHistory(){
   return h+'</div>';
 }
 
-function exportText(){
-  if(!history_.length) return 'No sessions logged yet.';
-  const out=['SHREDLOG EXPORT — v'+APP_VERSION,''];
-  history_.forEach(s=>{
-    const day=PROGRAM.find(d=>d.id===s.dayId);
-    out.push('## '+s.dayName+' — '+s.date+(s.durationSec?'  ('+Math.round(s.durationSec/60)+' min)':''));
-    Object.entries(s.entries).forEach(([id,rows])=>{
-      const ex=day&&day.exercises.find(e=>e.id===id);
-      const body=rows.map(r=>r.weight?(r.weight+'×'+(r.reps||'?')):(r.reps||'?')).join(', ');
-      out.push('- '+(ex?ex.name:id)+': '+body);
-    });
-    out.push('');
-  });
-  return out.join(String.fromCharCode(10));
-}
-
-function copyExp(){
-  const t=document.getElementById('exp');
-  const btn=document.getElementById('cpy');
-  const done=ok=>{ if(!btn)return; btn.textContent=ok?'Copied':'Select all & copy manually'; setTimeout(()=>{btn.textContent='Copy to clipboard';},2200); };
-  if(!t){done(false);return;}
-  t.focus(); t.select(); try{t.setSelectionRange(0,999999);}catch(e){}
-  // Path 1: async clipboard API (needs HTTPS + permission)
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(t.value).then(()=>done(true)).catch(()=>{
-      // Path 2: legacy execCommand
-      let ok=false; try{ok=document.execCommand('copy');}catch(e){}
-      done(ok);
-    });
-    return;
-  }
-  // Path 2 only
-  let ok=false; try{ok=document.execCommand('copy');}catch(e){}
-  done(ok);
-}
-
-
+/* ── export view ── */
 function viewExport(){
-  return '<div class="wrap"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="btn bgrey" style="padding:7px 12px" onclick="go(\'home\')">←</button><span style="font-size:19px;font-weight:700">Export</span></div>'+
-  '<p class="dim" style="font-size:13px;line-height:1.55;margin:0 0 14px">Tap Copy, then paste into the chat. If copy does nothing, long-press the text below and choose Select All → Copy.</p>'+
-  '<textarea id="exp" readonly style="min-height:300px">'+esc(exportText())+'</textarea>'+
-  '<button id="cpy" class="btn bgold" style="width:100%;margin-top:12px" onclick="copyExp()">Copy to clipboard</button></div>';
+  return '<div class="wrap"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><button class="btn bgrey" style="padding:7px 12px" data-goto="home" onclick="go(this.dataset.goto)">←</button><span style="font-size:19px;font-weight:700">Export</span></div>'
+    +'<p class="dim" style="font-size:13px;line-height:1.55;margin:0 0 14px">Tap Copy, then paste into the chat. Includes all your feedback so I can update the program.</p>'
+    +'<textarea id="exp" readonly>'+esc(exportText())+'</textarea>'
+    +'<button id="cpy" class="btn bgold" style="width:100%;margin-top:12px" onclick="copyExp()">Copy to clipboard</button></div>';
 }
 
-setInterval(()=>{
-  if(view==='workout'&&active){
-    const e=document.getElementById('elapsed');
-    if(e)e.textContent=clock(Math.floor((Date.now()-active.startedAt)/1000));
-  }
-},1000);
+/* ── timer loop ── */
+setInterval(()=>{if(view==='workout'&&active){const e=document.getElementById('elapsed');if(e)e.textContent=clock(Math.floor((Date.now()-active.startedAt)/1000));}},1000);
 
-if(active){wantWake=true;getWake()}
+if(active){wantWake=true;getWake();}
 render();
 </script>
 </body>
