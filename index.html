@@ -155,11 +155,19 @@ function updateFb(ex,f,v){
   if(f==='pain')fb[f]=(fb[f]===+v)?0:+v;
   else if(f==='rpe')fb[f]=(fb[f]===+v)?null:+v;
   else if(f==='tank')fb[f]=(fb[f]===v)?null:v;
-  else fb[f]=v;
+  else fb[f]=(fb[f]===v?'':v);
   persist();
   const wasOpen=document.getElementById('fbd-'+ex)&&document.getElementById('fbd-'+ex).style.display==='flex';
   const wrapper=document.querySelector('.fb-toggle[data-ex="'+ex+'"]')?.parentElement;
-  if(wrapper){wrapper.innerHTML=buildFeedback(ex,fb);if(wasOpen)toggleFbDrawer(ex);}
+  const drawer=document.getElementById('fbd-'+ex);
+  const toggle=document.querySelector('.fb-toggle[data-ex="'+ex+'"]');
+  if(drawer){drawer.innerHTML=buildDrawerContents(ex,fb);}
+  if(toggle){
+    const hasData=fb.tank||fb.rpe||fb.pain>0||fb.variant||fb.note;
+    toggle.style.background=hasData?'color-mix(in srgb,var(--blue) 8%,transparent)':'var(--card2)';
+    toggle.style.color=hasData?'var(--blue)':'var(--dim)';
+    toggle.innerHTML=hasData?'✏️&#8201; Feedback':'&#xFF0B;&#8201; Add feedback';
+  }
 }
 function toggleFbDrawer(exId){
   const d=document.getElementById('fbd-'+exId);if(!d)return;
@@ -171,6 +179,17 @@ document.addEventListener('click',function(e){
   const btn=e.target.closest('.fb-btn');if(!btn||!active)return;
   updateFb(btn.dataset.ex,btn.dataset.f,btn.dataset.v);
 });
+function addWarmup(exId){
+  if(!active)return;
+  if(active.entries[exId][0]&&active.entries[exId][0].warmup)return;
+  active.entries[exId]=[{weight:'',reps:'',done:false,prefill:false,warmup:true},...active.entries[exId]];
+  persist();render();
+}
+function removeWarmup(exId){
+  if(!active)return;
+  active.entries[exId]=active.entries[exId].filter(function(r){return !r.warmup;});
+  persist();render();
+}
 document.addEventListener('input',function(e){
   if(!e.target.classList.contains('fb-note'))return;
   const ex=e.target.dataset.ex;
@@ -189,15 +208,10 @@ function paintRest(){const e=document.getElementById('rest');if(restLeft===null)
 function styleCell(el,prefill){if(!el)return;el.style.color=prefill?'#AEB6C2':'var(--text)';el.style.fontWeight=prefill?'400':'700';el.style.background=prefill?'var(--bg)':'#FFFFFF';}
 
 /* ── feedback builder ── */
-function buildFeedback(exId,fb){
+function buildDrawerContents(exId,fb){
   fb=fb||{rpe:null,pain:0,tank:null,variant:'',note:''};
   const pe=['','😊','😐','😬','🔴'],pt=['','None','Slight','Moderate','Stop'];
-  const hasData=fb.tank||fb.rpe||fb.pain>0||fb.variant||fb.note;
-  let h='<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">';
-  h+='<button class="fb-toggle" data-ex="'+esc(exId)+'" onclick="toggleFbDrawer(this.dataset.ex)"'
-   +' style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 0;border:none;border-radius:8px;background:'+(hasData?'color-mix(in srgb,var(--blue) 8%,transparent)':'var(--card2)')+';color:'+(hasData?'var(--blue)':'var(--dim)')+';font-size:12px;font-weight:600;cursor:pointer">'
-   +(hasData?'✏️&#8201; Feedback':'＋&#8201; Add feedback')+'</button>';
-  h+='<div class="fb-drawer" id="fbd-'+esc(exId)+'" style="display:none;flex-direction:column;gap:14px;margin-top:12px;padding:14px;background:var(--card2);border-radius:12px;border:1px solid var(--line)">';
+  let h='';
   // tank
   h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
   [['all-in','💪','All in'],['tank','🛢','Had more']].forEach(function(vl){
@@ -219,20 +233,31 @@ function buildFeedback(exId,fb){
     h+='<button class="fb-btn" data-ex="'+esc(exId)+'" data-f="pain" data-v="'+p+'" style="display:flex;flex-direction:column;align-items:center;padding:7px 4px;gap:1px;border:2px solid '+(on?'#DC2626':'var(--line)')+';border-radius:9px;background:'+(on?'#FEF2F2':'var(--card)')+';cursor:pointer"><span style="font-size:17px">'+ico+'</span><span style="font-size:8.5px;color:'+(on?'#DC2626':'var(--dim)')+'">'+lbl+'</span></button>';
   });
   h+='</div></div>';
-  // equipment — larger buttons
+  // equipment
   h+='<div><div style="font-size:9.5px;letter-spacing:.12em;color:var(--dim);margin-bottom:7px">EQUIPMENT</div><div style="display:flex;gap:7px;flex-wrap:wrap">';
   [['Cable','⚡'],['Dumbbell','🏋'],['Barbell','🔩'],['Machine','⚙'],['Bodyweight','🤸']].forEach(function(cd){
     const v=cd[0],ico=cd[1],on=fb.variant===v;
     h+='<button class="fb-btn" data-ex="'+esc(exId)+'" data-f="variant" data-v="'+v+'" style="display:flex;align-items:center;gap:6px;padding:9px 16px;border:2px solid '+(on?'var(--green)':'var(--line)')+';border-radius:999px;background:'+(on?'color-mix(in srgb,var(--green) 10%,transparent)':'var(--card)')+';color:'+(on?'var(--green)':'var(--dim)')+';font-size:13px;font-weight:'+(on?650:400)+';cursor:pointer"><span style="font-size:14px">'+ico+'</span><span>'+v+'</span></button>';
   });
   h+='</div></div>';
-  // note — bigger input
+  // note
   h+='<input class="fb-note" data-ex="'+esc(exId)+'" type="text" value="'+esc(fb.note||'')+'" placeholder="Anything worth noting…" style="width:100%;background:var(--card);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:13px 14px;font-size:14px;outline:none;box-sizing:border-box">';
+  return h;
+}
+
+function buildFeedback(exId,fb){
+  fb=fb||{rpe:null,pain:0,tank:null,variant:'',note:''};
+  const hasData=fb.tank||fb.rpe||fb.pain>0||fb.variant||fb.note;
+  let h='<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">';
+  h+='<button class="fb-toggle" data-ex="'+esc(exId)+'" onclick="toggleFbDrawer(this.dataset.ex)"'
+   +' style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 0;border:none;border-radius:8px;background:'+(hasData?'color-mix(in srgb,var(--blue) 8%,transparent)':'var(--card2)')+';color:'+(hasData?'var(--blue)':'var(--dim)')+';font-size:12px;font-weight:600;cursor:pointer">'
+   +(hasData?'✏️&#8201; Feedback':'＋&#8201; Add feedback')+'</button>';
+  h+='<div class="fb-drawer" id="fbd-'+esc(exId)+'" style="display:none;flex-direction:column;gap:14px;margin-top:12px;padding:14px;background:var(--card2);border-radius:12px;border:1px solid var(--line)">';
+  h+=buildDrawerContents(exId,fb);
   h+='</div></div>';
   return h;
 }
 
-/* ── export ── */
 function exportText(){
   if(!history_.length)return 'No sessions logged yet.';
   const NL=String.fromCharCode(10);
@@ -333,8 +358,10 @@ function card(ex){
     const showW=ex.mode!=='bw';
     h+='<div style="margin-top:12px"><div class="row"><span class="lbl">SET</span>'+(showW?'<span class="lbl" style="text-align:center">'+col1+'</span>':'<span></span>')+'<span class="lbl" style="text-align:center">'+col2+'</span><span></span></div>';
     rows.forEach((r,i)=>{
-      h+='<div class="row" style="opacity:'+(r.done?.55:1)+'">';
-      h+='<span class="dim" style="font-size:13px">'+(i+1)+'</span>';
+      const isW=!!r.warmup;
+      const setNum=isW?'W':(i - rows.slice(0,i).filter(x=>x.warmup).length + 1);
+      h+='<div class="row" style="opacity:'+(r.done?.55:1)+';background:'+(isW?'var(--card2)':'transparent')+';border-radius:7px;margin:0 -4px;padding:0 4px">';
+      h+='<span style="font-size:12px;font-weight:'+(isW?'700':'400')+';color:'+(isW?'var(--blue)':'var(--dim)')+'">'+setNum+'</span>';
       if(showW){
         h+='<input class="inp" type="number" inputmode="decimal" data-exid="'+esc(ex.id)+'" data-idx="'+i+'" data-field="weight" style="color:'+(r.prefill?'#AEB6C2':'var(--text)')+';font-weight:'+(r.prefill?'400':'700')+';background:'+(r.prefill?'var(--bg)':'#FFFFFF')+'" onfocus="if(this.dataset.prefill)this.select()" '+(r.prefill?'data-prefill="1"':'')+' value="'+esc(r.weight)+'" oninput="setField(this.dataset.exid,+this.dataset.idx,this.dataset.field,this.value,this)">';
       } else {
@@ -345,6 +372,13 @@ function card(ex){
     });
     h+='</div>';
   }
+  // warmup toggle button
+  const hasWarmup=rows.length>0&&rows[0].warmup;
+  h+='<button data-exid="'+esc(ex.id)+'" onclick="'+(hasWarmup?'removeWarmup':'addWarmup')+'(this.dataset.exid)"'
+   +' style="width:100%;margin-top:6px;padding:7px 0;background:none;border:1px dashed '+(hasWarmup?'var(--blue)':'var(--line)')+';border-radius:8px;'
+   +'color:'+(hasWarmup?'var(--blue)':'var(--dim)')+';font-size:12px;cursor:pointer">'
+   +(hasWarmup?'✕ Remove warm-up set':'+ Add warm-up set')+'</button>';
+
   h+=buildFeedback(ex.id,fb);
   h+='</div>';
   return h;
@@ -458,7 +492,7 @@ function viewHistory(){
     Object.entries(s.entries).forEach(function([id,rows]){
       const ex=day&&day.exercises.find(e=>e.id===id);
       const fb=(s.exFeedback&&s.exFeedback[id])||{};
-      const setStr=rows.map(r=>r.weight?r.weight+'×'+r.reps:r.reps).join(' · ');
+      const setStr=rows.map(r=>(r.warmup?'W:':'')+( r.weight?r.weight+'×'+r.reps:r.reps)).join(' · ');
       h+='<div style="padding:6px 0;border-bottom:1px solid var(--line)">';
       h+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px"><span style="font-size:13px;font-weight:650">'+esc(ex?ex.name:id)+'</span>'+(fb.variant?'<span style="font-size:10.5px;color:var(--green);font-weight:600">'+esc(fb.variant)+'</span>':'')+'</div>';
       h+='<div style="font-size:12px;color:var(--dim)">'+esc(setStr)+'</div>';
